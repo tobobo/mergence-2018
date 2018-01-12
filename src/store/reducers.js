@@ -6,7 +6,6 @@ export default combineReducers({
   player: (state = { actions: undefined }, action) => {
     switch (action.type) {
       case RECEIVE_ACTIONS:
-        console.log('actions', action.actions);
         return extend({}, state, { actions: action.actions });
       default:
         return state;

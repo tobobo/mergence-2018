@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
 import { connect } from 'react-redux';
+import uuidv4 from 'uuid/v4';
 import store from '../store/store';
-import { RECEIVE_ACTION, pollActions } from '../store/actions';
+import { pollActions } from '../store/actions';
 
 class Player extends Component {
   constructor(props) {
     super(props);
-    this.state = { playerActions: [] };
+    this.state = { playerActions: [], clientId: uuidv4() };
   }
 
   componentDidMount() {
-    console.log('on mount');
     this.props.onMount();
     this.unsubscribe = store.subscribe(this.handleStoreChange.bind(this));
   }
@@ -21,12 +21,10 @@ class Player extends Component {
   }
 
   handleStoreChange() {
-    console.log('store', store.getState());
     this.setState({ playerActions: store.getState().player.actions });
   }
 
   render() {
-    console.log('state', this.state);
     return (
       <div>
         {map(this.state.playerActions, action => (

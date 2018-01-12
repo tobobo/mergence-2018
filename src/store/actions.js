@@ -20,15 +20,14 @@ const sendAction = (name, options) => dispatch => {
 };
 
 const pollActions = () => dispatch => {
-  console.log('requesting');
   request('/api/actions/123').then(actions => {
-    console.log('actions', actions);
+    if (!actions || !actions.length) return;
     return dispatch(receiveActions(actions));
   });
   setTimeout(() => pollActions()(dispatch), 1000);
 };
 
-const RECEIVE_ACTIONS = 'RECEIVE_ACTION';
+const RECEIVE_ACTIONS = 'RECEIVE_ACTIONS';
 const receiveActions = actions => ({
   type: RECEIVE_ACTIONS,
   actions
