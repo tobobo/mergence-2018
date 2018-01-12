@@ -1,37 +1,35 @@
-import forEach from 'lodash/forEach';
 import request from '../request/apiRequest';
 import store from './store';
 import uuidv4 from 'uuid/v4';
 
 const SEND_ACTION = 'SEND_ACTION';
-const sendAction = (clientId, name, options) => dispatch => {
-  return request('/api/actions', {
+const sendAction = (clientId, name, options) => dispatch =>
+  request('/api/actions', {
     method: 'post',
     body: {
       clientId,
       name,
-      options
-    }
+      options,
+    },
   }).then(
     response => console.log('sent action', response),
-    error => {
+    (error) => {
       console.log('some kinda post error', error);
-    }
+    },
   );
-};
 
-const getClientId = () => dispatch => {
+const getClientId = () => (dispatch) => {
   dispatch(receiveClientId(uuidv4()));
 };
 
 const RECEIVE_CLIENT_ID = 'RECEIVE_CLIENT_ID';
 const receiveClientId = clientId => ({
   type: RECEIVE_CLIENT_ID,
-  clientId
+  clientId,
 });
 
-const pollActions = () => dispatch => {
-  request(`/api/actions/${store.getState().player.clientId}`).then(actions => {
+const pollActions = () => (dispatch) => {
+  request(`/api/actions/${store.getState().player.clientId}`).then((actions) => {
     if (!actions || !actions.length) return;
     return dispatch(receiveActions(actions));
   });
@@ -41,11 +39,11 @@ const pollActions = () => dispatch => {
 const RECEIVE_ACTIONS = 'RECEIVE_ACTIONS';
 const receiveActions = actions => ({
   type: RECEIVE_ACTIONS,
-  actions
+  actions,
 });
 
-const pollClients = () => dispatch => {
-  request('/api/clients').then(clients => {
+const pollClients = () => (dispatch) => {
+  request('/api/clients').then((clients) => {
     if (!clients || !clients.length) return;
     return dispatch(receiveClients(clients));
   });
@@ -55,7 +53,7 @@ const pollClients = () => dispatch => {
 const RECEIVE_CLIENTS = 'RECEIVE_CLIENTS';
 const receiveClients = clients => ({
   type: RECEIVE_CLIENTS,
-  clients
+  clients,
 });
 
 export {
@@ -69,5 +67,5 @@ export {
   receiveActions,
   pollClients,
   RECEIVE_CLIENTS,
-  receiveClients
+  receiveClients,
 };

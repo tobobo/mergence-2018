@@ -10,9 +10,7 @@ class Controller extends Component {
 
   onActionClick() {
     if (!this.props.clients.length) return;
-    const clientId = this.props.clients[
-      Math.floor(Math.random() * this.props.clients.length)
-    ];
+    const clientId = this.props.clients[Math.floor(Math.random() * this.props.clients.length)];
     this.props.sendAction(clientId);
   }
 
@@ -27,16 +25,16 @@ class Controller extends Component {
 }
 
 const mapStateToProps = state => ({
-  clients: state.controller.clients
+  clients: state.controller.clients,
 });
 
 const matchDispatchToProps = dispatch => ({
   pollClients: () => {
     dispatch(pollClients());
   },
-  sendAction: clientId => {
+  sendAction: (clientId) => {
     dispatch(sendAction(clientId, 'my_action', { action: 'opts' }));
-  }
+  },
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(Controller);

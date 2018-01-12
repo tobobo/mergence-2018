@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Player from './player/player';
 import Controller from './controller/controller';

@@ -1,5 +1,6 @@
 import 'whatwg-fetch';
 import merge from 'lodash/merge';
+
 const API_BASE = 'http://localhost:3001';
 
 function handleJsonResponse(response) {
@@ -14,15 +15,13 @@ function handleJsonResponse(response) {
   }
 }
 
-export default function(path, options, ...rest) {
+export default function (path, options, ...rest) {
   const body = options ? JSON.stringify(options.body) : undefined;
   const reqOptions = merge({}, options, {
     body,
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   });
-  return fetch(`${API_BASE}${path}`, reqOptions, ...rest).then(
-    handleJsonResponse
-  );
+  return fetch(`${API_BASE}${path}`, reqOptions, ...rest).then(handleJsonResponse);
 }

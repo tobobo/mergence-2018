@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
 import { connect } from 'react-redux';
-import store from '../store/store';
 import { getClientId, pollActions } from '../store/actions';
 
 class Player extends Component {
@@ -19,18 +18,14 @@ class Player extends Component {
 
   render() {
     return (
-      <div>
-        {map(this.props.playerActions, action => (
-          <div>{JSON.stringify(action)}</div>
-        ))}
-      </div>
+      <div>{map(this.props.playerActions, action => <div>{JSON.stringify(action)}</div>)}</div>
     );
   }
 }
 
 const mapStateToProps = state => ({
   playerActions: state.player.actions,
-  clientId: state.player.clientId
+  clientId: state.player.clientId,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -39,7 +34,7 @@ const mapDispatchToProps = dispatch => ({
   },
   pollActions: () => {
     dispatch(pollActions());
-  }
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Player);
