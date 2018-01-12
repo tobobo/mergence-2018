@@ -1,5 +1,5 @@
 import uuidv4 from 'uuid/v4';
-import forEach from 'lodash/forEach';
+import forEachRight from 'lodash/forEachRight';
 import request from '../request/apiRequest';
 import store from './store';
 
@@ -64,7 +64,7 @@ const actionMappings = {
 
 const RECEIVE_ACTIONS = 'RECEIVE_ACTIONS';
 function receiveActions(actions) {
-  forEach(actions, (action) => {
+  forEachRight(actions, (action) => {
     if (actionMappings[action.type]) {
       actionMappings[action.type](action);
     }

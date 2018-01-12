@@ -24,15 +24,15 @@ class AudioManager extends Component {
   }
 
   setupOscillators() {
+    this.baseFreq = this.props.frequency;
+
     this.oscillator = this.audioContext.createOscillator();
     this.oscillator.type = 'sine';
-    this.oscillator.frequency.value = 220;
-    this.oscillator.baseFreq = 220;
+    this.oscillator.frequency.value = this.baseFreq;
 
     this.lowOsc = this.audioContext.createOscillator();
     this.lowOsc.type = 'square';
-    this.lowOsc.frequency.value = 110;
-    this.lowOsc.baseFreq = 110;
+    this.lowOsc.frequency.value = this.baseFreq / 2;
 
     const lowGain = this.audioContext.createGain();
     this.lowOsc.connect(lowGain);
@@ -46,10 +46,20 @@ class AudioManager extends Component {
     this.mainGain.connect(this.audioContext.destination);
     this.oscillator.start(0);
     this.lowOsc.start(0);
+    this.advanceLfos();
   }
 
   setGain(newGain) {
     this.mainGain.gain.value = newGain;
+  }
+
+  advanceLfos() {
+    const oscSinVal = Math.sin(this.audioContext.currentTime * 50) * 2;
+    this.oscillator.frequency.value = this.baseFreq + oscSinVal;
+    const lowOscSinVal = Math.sin(this.audioContext.currentTime * 0.075) * 0.75;
+    const lowBaseFreq = this.baseFreq / 2;
+    this.lowOsc.frequency.value = lowBaseFreq + lowOscSinVal;
+    setTimeout(() => this.advanceLfos(), 1);
   }
 
   render() {
@@ -59,10 +69,12 @@ class AudioManager extends Component {
 
 AudioManager.propTypes = {
   gain: propTypes.bool,
+  frequency: propTypes.number,
 };
 
 AudioManager.defaultProps = {
   gain: 0,
+  frequency: 220,
 };
 
 const mapStateToProps = state => ({
