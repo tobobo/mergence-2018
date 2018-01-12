@@ -1,9 +1,9 @@
+import uuidv4 from 'uuid/v4';
 import request from '../request/apiRequest';
 import store from './store';
-import uuidv4 from 'uuid/v4';
 
 const SEND_ACTION = 'SEND_ACTION';
-const sendAction = (clientId, name, options) => dispatch =>
+const sendAction = (clientId, name, options) => () =>
   request('/api/actions', {
     method: 'post',
     body: {
@@ -18,43 +18,53 @@ const sendAction = (clientId, name, options) => dispatch =>
     },
   );
 
-const getClientId = () => (dispatch) => {
-  dispatch(receiveClientId(uuidv4()));
-};
+function getClientId() {
+  return (dispatch) => {
+    dispatch(receiveClientId(uuidv4()));
+  };
+}
 
 const RECEIVE_CLIENT_ID = 'RECEIVE_CLIENT_ID';
-const receiveClientId = clientId => ({
-  type: RECEIVE_CLIENT_ID,
-  clientId,
-});
+function receiveClientId(clientId) {
+  return {
+    type: RECEIVE_CLIENT_ID,
+    clientId,
+  };
+}
 
-const pollActions = () => (dispatch) => {
-  request(`/api/actions/${store.getState().player.clientId}`).then((actions) => {
-    if (!actions || !actions.length) return;
-    return dispatch(receiveActions(actions));
-  });
-  setTimeout(() => pollActions()(dispatch), 1000);
-};
+function pollActions() {
+  return (dispatch) => {
+    request(`/api/actions/${store.getState().player.clientId}`).then((actions) => {
+      if (!actions || !actions.length) return undefined;
+      return dispatch(receiveActions(actions));
+    });
+    setTimeout(() => pollActions()(dispatch), 1000);
+  };
+}
 
 const RECEIVE_ACTIONS = 'RECEIVE_ACTIONS';
-const receiveActions = actions => ({
-  type: RECEIVE_ACTIONS,
-  actions,
-});
+function receiveActions(actions) {
+  return {
+    type: RECEIVE_ACTIONS,
+    actions,
+  };
+}
 
 const pollClients = () => (dispatch) => {
   request('/api/clients').then((clients) => {
-    if (!clients || !clients.length) return;
+    if (!clients || !clients.length) return undefined;
     return dispatch(receiveClients(clients));
   });
   setTimeout(() => pollClients()(dispatch), 1000);
 };
 
 const RECEIVE_CLIENTS = 'RECEIVE_CLIENTS';
-const receiveClients = clients => ({
-  type: RECEIVE_CLIENTS,
-  clients,
-});
+function receiveClients(clients) {
+  return {
+    type: RECEIVE_CLIENTS,
+    clients,
+  };
+}
 
 export {
   SEND_ACTION,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getClientId, pollActions } from '../store/actions';
 
@@ -22,6 +23,18 @@ class Player extends Component {
     );
   }
 }
+
+Player.propTypes = {
+  getClientId: propTypes.func.isRequired,
+  pollActions: propTypes.func.isRequired,
+  playerActions: propTypes.shape([]),
+  clientId: propTypes.string,
+};
+
+Player.defaultProps = {
+  playerActions: [],
+  clientId: undefined,
+};
 
 const mapStateToProps = state => ({
   playerActions: state.player.actions,

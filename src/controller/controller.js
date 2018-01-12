@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import map from 'lodash/map';
+import propTypes from 'prop-types';
 import { pollClients, sendAction } from '../store/actions';
 
 class Controller extends Component {
@@ -17,12 +18,22 @@ class Controller extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.onActionClick.bind(this)}>Dispatch</button>
+        <button onClick={() => this.onActionClick()}>Dispatch</button>
         <div>{map(this.props.clients, client => <div>{client}</div>)}</div>
       </div>
     );
   }
 }
+
+Controller.propTypes = {
+  pollClients: propTypes.func.isRequired,
+  sendAction: propTypes.func.isRequired,
+  clients: propTypes.arrayOf(propTypes.string),
+};
+
+Controller.defaultProps = {
+  clients: [],
+};
 
 const mapStateToProps = state => ({
   clients: state.controller.clients,
