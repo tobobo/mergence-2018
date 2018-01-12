@@ -1,33 +1,26 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
 import { connect } from 'react-redux';
-import uuidv4 from 'uuid/v4';
 import store from '../store/store';
-import { pollActions } from '../store/actions';
+import { getClientId, pollActions } from '../store/actions';
 
 class Player extends Component {
   constructor(props) {
     super(props);
-    this.state = { playerActions: [], clientId: uuidv4() };
+    props.getClientId();
   }
 
-  componentDidMount() {
-    this.props.onMount();
-    this.unsubscribe = store.subscribe(this.handleStoreChange.bind(this));
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  handleStoreChange() {
-    this.setState({ playerActions: store.getState().player.actions });
+  componentDidUpdate() {
+    if (this.props.clientId && !this.polling) {
+      this.polling = true;
+      this.props.pollActions();
+    }
   }
 
   render() {
     return (
       <div>
-        {map(this.state.playerActions, action => (
+        {map(this.props.playerActions, action => (
           <div>{JSON.stringify(action)}</div>
         ))}
       </div>
@@ -35,10 +28,18 @@ class Player extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  playerActions: state.player.actions,
+  clientId: state.player.clientId
+});
+
 const mapDispatchToProps = dispatch => ({
-  onMount: () => {
+  getClientId: () => {
+    dispatch(getClientId());
+  },
+  pollActions: () => {
     dispatch(pollActions());
   }
 });
 
-export default connect(() => ({}), mapDispatchToProps)(Player);
+export default connect(mapStateToProps, mapDispatchToProps)(Player);
