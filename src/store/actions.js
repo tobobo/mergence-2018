@@ -1,14 +1,15 @@
 import uuidv4 from 'uuid/v4';
+import forEach from 'lodash/forEach';
 import request from '../request/apiRequest';
 import store from './store';
 
 const SEND_ACTION = 'SEND_ACTION';
-const sendAction = (clientId, name, options) => () =>
+const sendAction = (clientId, type, options) => () =>
   request('/api/actions', {
     method: 'post',
     body: {
       clientId,
-      name,
+      type,
       options,
     },
   }).then(
@@ -42,8 +43,33 @@ function pollActions() {
   };
 }
 
+const RECEIVE_ON = 'RECEIVE_ON';
+function receiveOn() {
+  return {
+    type: RECEIVE_ON,
+  };
+}
+
+const RECEIVE_OFF = 'RECEIVE_OFF';
+function receiveOff() {
+  return {
+    type: RECEIVE_OFF,
+  };
+}
+
+const actionMappings = {
+  on: () => store.dispatch(receiveOn()),
+  off: () => store.dispatch(receiveOff()),
+};
+
 const RECEIVE_ACTIONS = 'RECEIVE_ACTIONS';
 function receiveActions(actions) {
+  forEach(actions, (action) => {
+    if (actionMappings[action.type]) {
+      actionMappings[action.type](action);
+    }
+  });
+
   return {
     type: RECEIVE_ACTIONS,
     actions,
@@ -73,6 +99,10 @@ export {
   RECEIVE_CLIENT_ID,
   receiveClientId,
   pollActions,
+  RECEIVE_ON,
+  receiveOn,
+  RECEIVE_OFF,
+  receiveOff,
   RECEIVE_ACTIONS,
   receiveActions,
   pollClients,

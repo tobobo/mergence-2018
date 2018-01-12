@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import map from 'lodash/map';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
+import map from 'lodash/map';
 import { getClientId, pollActions } from '../store/actions';
+import AudioManager from './AudioManager';
 
 class Player extends Component {
   constructor(props) {
@@ -19,7 +20,10 @@ class Player extends Component {
 
   render() {
     return (
-      <div>{map(this.props.playerActions, action => <div>{JSON.stringify(action)}</div>)}</div>
+      <div>
+        <AudioManager />
+        <div>{map(this.props.playerActions, action => <div>{JSON.stringify(action)}</div>)}</div>
+      </div>
     );
   }
 }

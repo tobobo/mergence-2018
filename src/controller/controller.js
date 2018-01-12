@@ -9,17 +9,18 @@ class Controller extends Component {
     this.props.pollClients();
   }
 
-  onActionClick() {
-    if (!this.props.clients.length) return;
-    const clientId = this.props.clients[Math.floor(Math.random() * this.props.clients.length)];
-    this.props.sendAction(clientId);
-  }
-
   render() {
     return (
       <div>
-        <button onClick={() => this.onActionClick()}>Dispatch</button>
-        <div>{map(this.props.clients, client => <div>{client}</div>)}</div>
+        <div>
+          {map(this.props.clients, clientId => (
+            <div>
+              {clientId}
+              <button onClick={() => this.props.sendAction(clientId, 'on')}>on</button>
+              <button onClick={() => this.props.sendAction(clientId, 'off')}>off</button>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -39,13 +40,13 @@ const mapStateToProps = state => ({
   clients: state.controller.clients,
 });
 
-const matchDispatchToProps = dispatch => ({
+const mapDispatchToProps = dispatch => ({
   pollClients: () => {
     dispatch(pollClients());
   },
-  sendAction: (clientId) => {
-    dispatch(sendAction(clientId, 'my_action', { action: 'opts' }));
+  sendAction: (clientId, name, options) => {
+    dispatch(sendAction(clientId, name, options));
   },
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(Controller);
+export default connect(mapStateToProps, mapDispatchToProps)(Controller);
