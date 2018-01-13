@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import map from 'lodash/map';
 import propTypes from 'prop-types';
-import { pollClients, sendAction } from '../store/actions';
+import { pollClients, sendClientAction } from '../store/actions';
 
 class Controller extends Component {
   componentDidMount() {
@@ -14,10 +14,10 @@ class Controller extends Component {
       <div>
         <div>
           {map(this.props.clients, clientId => (
-            <div>
+            <div key={clientId}>
               {clientId}
-              <button onClick={() => this.props.sendAction(clientId, 'on')}>on</button>
-              <button onClick={() => this.props.sendAction(clientId, 'off')}>off</button>
+              <button onClick={() => this.props.sendClientAction(clientId, 'on')}>on</button>
+              <button onClick={() => this.props.sendClientAction(clientId, 'off')}>off</button>
             </div>
           ))}
         </div>
@@ -28,7 +28,7 @@ class Controller extends Component {
 
 Controller.propTypes = {
   pollClients: propTypes.func.isRequired,
-  sendAction: propTypes.func.isRequired,
+  sendClientAction: propTypes.func.isRequired,
   clients: propTypes.arrayOf(propTypes.string),
 };
 
@@ -44,8 +44,8 @@ const mapDispatchToProps = dispatch => ({
   pollClients: () => {
     dispatch(pollClients());
   },
-  sendAction: (clientId, name, options) => {
-    dispatch(sendAction(clientId, name, options));
+  sendClientAction: (clientId, name, options) => {
+    dispatch(sendClientAction(clientId, name, options));
   },
 });
 

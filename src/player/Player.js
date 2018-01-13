@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import map from 'lodash/map';
-import { getClientId, pollActions } from '../store/actions';
+import { getClientId, pollClientActions } from '../store/actions';
 import AudioManager from './AudioManager';
 
 class Player extends Component {
@@ -14,7 +14,7 @@ class Player extends Component {
   componentDidUpdate() {
     if (this.props.clientId && !this.polling) {
       this.polling = true;
-      this.props.pollActions();
+      this.props.pollClientActions(this.props.clientId);
     }
   }
 
@@ -22,7 +22,11 @@ class Player extends Component {
     return (
       <div>
         <AudioManager />
-        <div>{map(this.props.playerActions, action => <div>{JSON.stringify(action)}</div>)}</div>
+        <div>
+          {map(this.props.clientActions, clientAction => (
+            <div key={clientAction.time}>{JSON.stringify(clientAction)}</div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -30,18 +34,18 @@ class Player extends Component {
 
 Player.propTypes = {
   getClientId: propTypes.func.isRequired,
-  pollActions: propTypes.func.isRequired,
-  playerActions: propTypes.shape([]),
+  pollClientActions: propTypes.func.isRequired,
+  clientActions: propTypes.arrayOf(propTypes.shape({})),
   clientId: propTypes.string,
 };
 
 Player.defaultProps = {
-  playerActions: [],
+  clientActions: [],
   clientId: undefined,
 };
 
 const mapStateToProps = state => ({
-  playerActions: state.player.actions,
+  clientActions: state.player.clientActions,
   clientId: state.player.clientId,
 });
 
@@ -49,8 +53,8 @@ const mapDispatchToProps = dispatch => ({
   getClientId: () => {
     dispatch(getClientId());
   },
-  pollActions: () => {
-    dispatch(pollActions());
+  pollClientActions: (clientId) => {
+    dispatch(pollClientActions(clientId));
   },
 });
 

@@ -1,11 +1,8 @@
 import uuidv4 from 'uuid/v4';
-import forEachRight from 'lodash/forEachRight';
 import request from '../request/apiRequest';
-import store from './store';
 
-const SEND_ACTION = 'SEND_ACTION';
-const sendAction = (clientId, type, options) => () =>
-  request('/api/actions', {
+const sendClientAction = (clientId, type, options) => () =>
+  request('/api/client_actions', {
     method: 'post',
     body: {
       clientId,
@@ -13,7 +10,7 @@ const sendAction = (clientId, type, options) => () =>
       options,
     },
   }).then(
-    response => console.log('sent action', response),
+    response => console.log('sent player action', response),
     (error) => {
       console.log('some kinda post error', error);
     },
@@ -33,46 +30,21 @@ function receiveClientId(clientId) {
   };
 }
 
-function pollActions() {
+function pollClientActions(clientId) {
   return (dispatch) => {
-    request(`/api/actions/${store.getState().player.clientId}`).then((actions) => {
-      if (!actions || !actions.length) return undefined;
-      return dispatch(receiveActions(actions));
+    request(`/api/client_actions/${clientId}`).then((clientActions) => {
+      if (!clientActions || !clientActions.length) return undefined;
+      return dispatch(receiveClientActions(clientActions));
     });
-    setTimeout(() => pollActions()(dispatch), 1000);
+    setTimeout(() => pollClientActions(clientId)(dispatch), 1000);
   };
 }
 
-const RECEIVE_ON = 'RECEIVE_ON';
-function receiveOn() {
+const RECEIVE_CLIENT_ACTIONS = 'RECEIVE_CLIENT_ACTIONS';
+function receiveClientActions(clientActions) {
   return {
-    type: RECEIVE_ON,
-  };
-}
-
-const RECEIVE_OFF = 'RECEIVE_OFF';
-function receiveOff() {
-  return {
-    type: RECEIVE_OFF,
-  };
-}
-
-const actionMappings = {
-  on: () => store.dispatch(receiveOn()),
-  off: () => store.dispatch(receiveOff()),
-};
-
-const RECEIVE_ACTIONS = 'RECEIVE_ACTIONS';
-function receiveActions(actions) {
-  forEachRight(actions, (action) => {
-    if (actionMappings[action.type]) {
-      actionMappings[action.type](action);
-    }
-  });
-
-  return {
-    type: RECEIVE_ACTIONS,
-    actions,
+    type: RECEIVE_CLIENT_ACTIONS,
+    clientActions,
   };
 }
 
@@ -93,18 +65,13 @@ function receiveClients(clients) {
 }
 
 export {
-  SEND_ACTION,
-  sendAction,
+  sendClientAction,
   getClientId,
   RECEIVE_CLIENT_ID,
   receiveClientId,
-  pollActions,
-  RECEIVE_ON,
-  receiveOn,
-  RECEIVE_OFF,
-  receiveOff,
-  RECEIVE_ACTIONS,
-  receiveActions,
+  pollClientActions,
+  RECEIVE_CLIENT_ACTIONS,
+  receiveClientActions,
   pollClients,
   RECEIVE_CLIENTS,
   receiveClients,

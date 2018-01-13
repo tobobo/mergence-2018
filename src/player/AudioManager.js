@@ -68,7 +68,7 @@ class AudioManager extends Component {
 }
 
 AudioManager.propTypes = {
-  gain: propTypes.bool,
+  gain: propTypes.number,
   frequency: propTypes.number,
 };
 
