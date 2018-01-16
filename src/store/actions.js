@@ -11,13 +11,13 @@ const sendClientAction = (clientId, type, options) => () =>
     },
   }).then(
     response => console.log('sent player action', response),
-    (error) => {
+    error => {
       console.log('some kinda post error', error);
-    },
+    }
   );
 
 function getClientId() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(receiveClientId(uuidv4()));
   };
 }
@@ -31,8 +31,8 @@ function receiveClientId(clientId) {
 }
 
 function pollClientActions(clientId) {
-  return (dispatch) => {
-    request(`/api/client_actions/${clientId}`).then((clientActions) => {
+  return dispatch => {
+    request(`/api/client_actions/${clientId}`).then(clientActions => {
       if (!clientActions || !clientActions.length) return undefined;
       return dispatch(receiveClientActions(clientActions));
     });
@@ -48,8 +48,8 @@ function receiveClientActions(clientActions) {
   };
 }
 
-const pollClients = () => (dispatch) => {
-  request('/api/clients').then((clients) => {
+const pollClients = () => dispatch => {
+  request('/api/clients').then(clients => {
     if (!clients || !clients.length) return undefined;
     return dispatch(receiveClients(clients));
   });
@@ -64,6 +64,14 @@ function receiveClients(clients) {
   };
 }
 
+const SET_SELECTED_CLIENT = 'SET_SELECTED_CLIENT';
+function setSelectedClient(selectedClientIndex) {
+  return {
+    type: SET_SELECTED_CLIENT,
+    selectedClientIndex,
+  };
+}
+
 export {
   sendClientAction,
   getClientId,
@@ -75,4 +83,6 @@ export {
   pollClients,
   RECEIVE_CLIENTS,
   receiveClients,
+  SET_SELECTED_CLIENT,
+  setSelectedClient,
 };

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-import map from 'lodash/map';
 import { getClientId, pollClientActions } from '../store/actions';
 import AudioManager from './AudioManager';
+import VisualsManager from './VisualsManager';
 
 class Player extends Component {
   constructor(props) {
@@ -20,13 +20,14 @@ class Player extends Component {
 
   render() {
     return (
-      <div>
+      <div className="full-size">
+        <VisualsManager />
         <AudioManager />
-        <div>
+        {/* <div>
           {map(this.props.clientActions, clientAction => (
             <div key={clientAction.time}>{JSON.stringify(clientAction)}</div>
           ))}
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -35,12 +36,12 @@ class Player extends Component {
 Player.propTypes = {
   getClientId: propTypes.func.isRequired,
   pollClientActions: propTypes.func.isRequired,
-  clientActions: propTypes.arrayOf(propTypes.shape({})),
+  // clientActions: propTypes.arrayOf(propTypes.shape({})),
   clientId: propTypes.string,
 };
 
 Player.defaultProps = {
-  clientActions: [],
+  // clientActions: [],
   clientId: undefined,
 };
 
@@ -53,7 +54,7 @@ const mapDispatchToProps = dispatch => ({
   getClientId: () => {
     dispatch(getClientId());
   },
-  pollClientActions: (clientId) => {
+  pollClientActions: clientId => {
     dispatch(pollClientActions(clientId));
   },
 });

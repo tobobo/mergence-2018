@@ -10,7 +10,7 @@ import './App.css';
 export default () => (
   <Provider store={store}>
     <Router>
-      <div>
+      <div className="full-size">
         <Route exact path="/" component={Player} />
         <Route exact path="/perform" component={Controller} />
       </div>

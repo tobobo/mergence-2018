@@ -4,18 +4,15 @@ import merge from 'lodash/merge';
 const API_BASE = 'http://localhost:3001';
 
 function handleJsonResponse(response) {
-  if (!response) return undefined;
-  let responseJson;
   try {
-    responseJson = response.json();
-    return responseJson;
+    return response.json();
   } catch (err) {
     console.log('parse error', err);
     throw err;
   }
 }
 
-export default function (path, options, ...rest) {
+export default function(path, options, ...rest) {
   const body = options ? JSON.stringify(options.body) : undefined;
   const reqOptions = merge({}, options, {
     body,
@@ -23,5 +20,7 @@ export default function (path, options, ...rest) {
       'Content-Type': 'application/json',
     },
   });
-  return fetch(`${API_BASE}${path}`, reqOptions, ...rest).then(handleJsonResponse);
+  return fetch(`${API_BASE}${path}`, reqOptions, ...rest).then(
+    handleJsonResponse
+  );
 }

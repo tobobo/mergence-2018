@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import map from 'lodash/map';
 import propTypes from 'prop-types';
-import { pollClients, sendClientAction } from '../store/actions';
+import {
+  pollClients,
+  sendClientAction,
+  setSelectedClient,
+} from '../store/actions';
+import ClientSwitcher from './controls/ClientSwitcher';
 
 class Controller extends Component {
   componentDidMount() {
@@ -10,17 +15,29 @@ class Controller extends Component {
   }
 
   render() {
+    const { clients, selectedClientIndex } = this.props;
     return (
       <div>
-        <div>
-          {map(this.props.clients, clientId => (
-            <div key={clientId}>
-              {clientId}
-              <button onClick={() => this.props.sendClientAction(clientId, 'on')}>on</button>
-              <button onClick={() => this.props.sendClientAction(clientId, 'off')}>off</button>
-            </div>
-          ))}
-        </div>
+        <ClientSwitcher
+          setSelectedClient={this.props.setSelectedClient}
+          selectedClientIndex={selectedClientIndex}
+          clients={clients}
+          sendClientAction={this.props.sendClientAction}
+          direction="asc"
+        />
+        {map(clients, clientId => (
+          <div key={clientId}>
+            {clientId}
+            <button onClick={() => this.props.sendClientAction(clientId, 'on')}>
+              on
+            </button>
+            <button
+              onClick={() => this.props.sendClientAction(clientId, 'off')}
+            >
+              off
+            </button>
+          </div>
+        ))}
       </div>
     );
   }
@@ -29,7 +46,9 @@ class Controller extends Component {
 Controller.propTypes = {
   pollClients: propTypes.func.isRequired,
   sendClientAction: propTypes.func.isRequired,
+  setSelectedClient: propTypes.func.isRequired,
   clients: propTypes.arrayOf(propTypes.string),
+  selectedClientIndex: propTypes.number.isRequired,
 };
 
 Controller.defaultProps = {
@@ -38,6 +57,7 @@ Controller.defaultProps = {
 
 const mapStateToProps = state => ({
   clients: state.controller.clients,
+  selectedClientIndex: state.controller.selectedClientIndex,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -46,6 +66,9 @@ const mapDispatchToProps = dispatch => ({
   },
   sendClientAction: (clientId, name, options) => {
     dispatch(sendClientAction(clientId, name, options));
+  },
+  setSelectedClient: selectedClientIndex => {
+    dispatch(setSelectedClient(selectedClientIndex));
   },
 });
 

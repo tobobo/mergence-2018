@@ -1,7 +1,12 @@
 import { combineReducers } from 'redux';
 import extend from 'lodash/extend';
 import forEachRight from 'lodash/forEachRight';
-import { RECEIVE_CLIENT_ID, RECEIVE_CLIENT_ACTIONS, RECEIVE_CLIENTS } from './actions';
+import {
+  RECEIVE_CLIENT_ID,
+  RECEIVE_CLIENT_ACTIONS,
+  RECEIVE_CLIENTS,
+  SET_SELECTED_CLIENT,
+} from './actions';
 
 const clientActionMappings = {
   on: state => extend({}, state, { gain: 1 }),
@@ -10,7 +15,7 @@ const clientActionMappings = {
 
 function handleReceiveClientActions(state, { clientActions }) {
   let newState = extend({}, state, { clientActions });
-  forEachRight(clientActions, (clientAction) => {
+  forEachRight(clientActions, clientAction => {
     if (!clientActionMappings[clientAction.type]) return;
     newState = clientActionMappings[clientAction.type](newState);
   });
@@ -18,7 +23,10 @@ function handleReceiveClientActions(state, { clientActions }) {
 }
 
 export default combineReducers({
-  player: (state = { clientActions: undefined, clientId: undefined, gain: 0 }, action) => {
+  player: (
+    state = { clientActions: undefined, clientId: undefined, gain: 0 },
+    action
+  ) => {
     switch (action.type) {
       case RECEIVE_CLIENT_ID:
         return extend({}, state, { clientId: action.clientId });
@@ -28,10 +36,17 @@ export default combineReducers({
         return state;
     }
   },
-  controller: (state = { clients: undefined }, action) => {
+  controller: (
+    state = { clients: undefined, selectedClientIndex: 0 },
+    action
+  ) => {
     switch (action.type) {
       case RECEIVE_CLIENTS:
         return extend({}, state, { clients: action.clients });
+      case SET_SELECTED_CLIENT:
+        return extend({}, state, {
+          selectedClientIndex: action.selectedClientIndex,
+        });
       default:
         return state;
     }
