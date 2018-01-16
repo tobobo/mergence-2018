@@ -25,6 +25,9 @@ class Controller extends Component {
           sendClientAction={this.props.sendClientAction}
           direction="asc"
         />
+        <button onClick={() => this.props.sendClientAction('*', 'off')}>
+          all off
+        </button>
         {map(clients, clientId => (
           <div key={clientId}>
             {clientId}
