@@ -17,9 +17,10 @@ class AudioManager extends Component {
     if (this.hasAudio) this.setupOscillators();
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps({ gain, frequency }) {
     if (this.hasAudio) {
-      this.setGain(newProps.gain);
+      this.setGain(gain);
+      this.setFrequency(frequency);
     }
   }
 
@@ -53,6 +54,10 @@ class AudioManager extends Component {
     this.mainGain.gain.value = newGain;
   }
 
+  setFrequency(newFrequency) {
+    this.baseFreq = newFrequency;
+  }
+
   advanceLfos() {
     const oscSinVal = Math.sin(this.audioContext.currentTime * 50) * 2;
     this.oscillator.frequency.value = this.baseFreq + oscSinVal;
@@ -79,6 +84,7 @@ AudioManager.defaultProps = {
 
 const mapStateToProps = state => ({
   gain: state.player.gain,
+  frequency: state.player.frequency,
 });
 
 export default connect(mapStateToProps, undefined)(AudioManager);

@@ -11,20 +11,29 @@ import {
 const clientActionMappings = {
   on: state => extend({}, state, { gain: 1 }),
   off: state => extend({}, state, { gain: 0 }),
+  frequency: (state, { frequency }) => extend({}, state, { frequency }),
 };
 
 function handleReceiveClientActions(state, { clientActions }) {
   let newState = extend({}, state, { clientActions });
   forEachRight(clientActions, clientAction => {
     if (!clientActionMappings[clientAction.type]) return;
-    newState = clientActionMappings[clientAction.type](newState);
+    newState = clientActionMappings[clientAction.type](
+      newState,
+      clientAction.options
+    );
   });
   return newState;
 }
 
 export default combineReducers({
   player: (
-    state = { clientActions: undefined, clientId: undefined, gain: 0 },
+    state = {
+      clientActions: undefined,
+      clientId: undefined,
+      gain: 0,
+      frequency: 220,
+    },
     action
   ) => {
     switch (action.type) {

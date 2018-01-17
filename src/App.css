@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body,
 html {
   width: 100%;
@@ -7,4 +11,42 @@ html {
 .full-size {
   width: 100%;
   height: 100%;
+}
+
+.keyboard, .octave {
+  border-collapse: collapse;
+}
+
+.octave {
+  position: relative;
+  display: inline-block;
+}
+
+.key {
+  display: inline-block;
+}
+
+.key-white {
+  background-color: #FFFFFF;
+  border-color: black;
+  border-style: solid;
+  border-width: 1px 0 1px 1px;
+  width: 20px;
+  height: 70px;
+}
+/*
+.key-white + .key-white {
+  border-width: 1px 1px 1px 0;
+} */
+
+.octave:last-child .key-white:last-child {
+  border-right-width: 1px;
+}
+
+.key-black {
+  background-color: #000000;
+  width: 10px;
+  height: 45px;
+  position: absolute;
+  margin-left: -5px;
 }

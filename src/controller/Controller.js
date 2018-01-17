@@ -8,6 +8,7 @@ import {
   setSelectedClient,
 } from '../store/actions';
 import ClientSwitcher from './controls/ClientSwitcher';
+import KeyboardContainer from './controls/KeyboardContainer';
 
 class Controller extends Component {
   componentDidMount() {
@@ -28,6 +29,10 @@ class Controller extends Component {
         <button onClick={() => this.props.sendClientAction('*', 'off')}>
           all off
         </button>
+        <KeyboardContainer
+          clients={clients}
+          sendClientAction={this.props.sendClientAction}
+        />
         {map(clients, clientId => (
           <div key={clientId}>
             {clientId}

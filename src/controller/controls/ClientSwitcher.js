@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
-import SwitchClient from './SwitchClient';
 
 class ClientSwitcher extends Component {
   constructor(props) {
@@ -12,42 +11,39 @@ class ClientSwitcher extends Component {
     this.setState({ solo: e.target.checked });
   }
 
-  render() {
+  handleSwitch(direction) {
+    const { solo } = this.state;
     const {
-      setSelectedClient,
-      selectedClientIndex,
       clients,
+      setSelectedClient,
       sendClientAction,
+      selectedClientIndex,
     } = this.props;
+    const oldClientIndex = selectedClientIndex;
+    const offsetClientIndex =
+      direction === 'asc' ? selectedClientIndex + 1 : selectedClientIndex - 1;
+    const newClientIndex =
+      offsetClientIndex >= 0
+        ? offsetClientIndex % clients.length
+        : oldClientIndex + 1 - offsetClientIndex;
+    setSelectedClient(newClientIndex);
+    sendClientAction(clients[newClientIndex], 'on');
+    if (solo) sendClientAction(clients[oldClientIndex], 'off');
+  }
+
+  render() {
+    const { selectedClientIndex, clients } = this.props;
     const { solo } = this.state;
     return (
       <div>
         <div>clients: {clients.length}</div>
         <div>selected: {selectedClientIndex + 1}</div>
-        <SwitchClient
-          setSelectedClient={setSelectedClient}
-          selectedClientIndex={selectedClientIndex}
-          clients={clients}
-          sendClientAction={sendClientAction}
-          direction="asc"
-          solo={solo}
-        >
-          +
-        </SwitchClient>
-        <SwitchClient
-          setSelectedClient={setSelectedClient}
-          selectedClientIndex={selectedClientIndex}
-          sendClientAction={sendClientAction}
-          clients={clients}
-          direction="desc"
-          solo={solo}
-        >
-          -
-        </SwitchClient>
+        <button onClick={() => this.handleSwitch('asc')}>+</button>
+        <button onClick={() => this.handleSwitch('desc')}>-</button>
         <label htmlFor="solo">
           <input
             type="checkbox"
-            checked={this.state.solo}
+            checked={solo}
             onChange={e => this.handleSoloChange(e)}
             id="solo"
           />
