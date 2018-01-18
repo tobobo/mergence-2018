@@ -26,6 +26,16 @@ function handleReceiveClientActions(state, { clientActions }) {
   return newState;
 }
 
+function handleReceiveClients(state, { clients }) {
+  const newStateValues = { clients };
+  if (!clients.length) {
+    newStateValues.selectedClientIndex = 0;
+  } else if (clients.length < state.selectedClientIndex) {
+    newStateValues.selectedClientIndex = clients.length - 1;
+  }
+  return extend({}, state, newStateValues);
+}
+
 export default combineReducers({
   player: (
     state = {
@@ -51,7 +61,7 @@ export default combineReducers({
   ) => {
     switch (action.type) {
       case RECEIVE_CLIENTS:
-        return extend({}, state, { clients: action.clients });
+        return handleReceiveClients(state, action);
       case SET_SELECTED_CLIENT:
         return extend({}, state, {
           selectedClientIndex: action.selectedClientIndex,

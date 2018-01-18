@@ -34,10 +34,10 @@ html {
   width: 20px;
   height: 70px;
 }
-/*
-.key-white + .key-white {
-  border-width: 1px 1px 1px 0;
-} */
+
+.key-white:hover {
+  background-color: #AAAAAA;
+}
 
 .octave:last-child .key-white:last-child {
   border-right-width: 1px;
@@ -49,4 +49,8 @@ html {
   height: 45px;
   position: absolute;
   margin-left: -5px;
+}
+
+.key-black:hover {
+  background-color: #333333;
 }

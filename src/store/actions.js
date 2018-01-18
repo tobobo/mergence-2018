@@ -50,7 +50,7 @@ function receiveClientActions(clientActions) {
 
 const pollClients = () => dispatch => {
   request('/api/clients').then(clients => {
-    if (!clients || !clients.length) return undefined;
+    if (!clients) return undefined;
     return dispatch(receiveClients(clients));
   });
   setTimeout(() => pollClients()(dispatch), 1000);

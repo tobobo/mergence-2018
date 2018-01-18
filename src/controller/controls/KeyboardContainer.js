@@ -11,6 +11,7 @@ class KeyboardContainer extends Component {
   sendFreqToNextClient(frequency) {
     const { selectedClientIndex } = this;
     const { clients, sendClientAction } = this.props;
+    if (!clients.length) return;
     const offsetClientIndex = selectedClientIndex + 1;
     const newClientIndex = offsetClientIndex % clients.length;
     sendClientAction(clients[newClientIndex], 'frequency', { frequency });

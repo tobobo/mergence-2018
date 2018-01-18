@@ -19,6 +19,7 @@ class ClientSwitcher extends Component {
       sendClientAction,
       selectedClientIndex,
     } = this.props;
+    if (!clients.length) return;
     const oldClientIndex = selectedClientIndex;
     const offsetClientIndex =
       direction === 'asc' ? selectedClientIndex + 1 : selectedClientIndex - 1;
@@ -28,7 +29,8 @@ class ClientSwitcher extends Component {
         : oldClientIndex + 1 - offsetClientIndex;
     setSelectedClient(newClientIndex);
     sendClientAction(clients[newClientIndex], 'on');
-    if (solo) sendClientAction(clients[oldClientIndex], 'off');
+    if (solo && newClientIndex !== oldClientIndex)
+      sendClientAction(clients[oldClientIndex], 'off');
   }
 
   render() {
@@ -37,7 +39,13 @@ class ClientSwitcher extends Component {
     return (
       <div>
         <div>clients: {clients.length}</div>
-        <div>selected: {selectedClientIndex + 1}</div>
+        {clients.length ? (
+          <div>selected: {selectedClientIndex + 1}</div>
+        ) : (
+          <div>
+            <em>no client to select</em>
+          </div>
+        )}
         <button onClick={() => this.handleSwitch('asc')}>+</button>
         <button onClick={() => this.handleSwitch('desc')}>-</button>
         <label htmlFor="solo">

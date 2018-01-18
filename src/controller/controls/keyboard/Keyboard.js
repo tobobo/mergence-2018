@@ -7,7 +7,7 @@ import Octave from './Octave';
 const Keyboard = ({ onKeyPress }) => (
   <div className="keyboard">
     {map(range(2, 7), octave => (
-      <Octave octave={octave} onKeyPress={onKeyPress} />
+      <Octave key={octave} octave={octave} onKeyPress={onKeyPress} />
     ))}
   </div>
 );
