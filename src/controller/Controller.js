@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import map from 'lodash/map';
+import { map } from 'lodash';
 import propTypes from 'prop-types';
 import {
   pollClients,
@@ -9,6 +9,7 @@ import {
 } from '../store/actions';
 import ClientSwitcher from './controls/ClientSwitcher';
 import KeyboardContainer from './controls/KeyboardContainer';
+import RandomGroup from './controls/RandomGroup';
 
 class Controller extends Component {
   componentDidMount() {
@@ -16,57 +17,52 @@ class Controller extends Component {
   }
 
   render() {
-    const { clients, selectedClientIndex } = this.props;
+    const {
+      clients,
+      selectedClientIndex,
+      sendClientAction: sendAction,
+      setSelectedClient: setSelected,
+    } = this.props;
     return (
       <div>
         <ClientSwitcher
-          setSelectedClient={this.props.setSelectedClient}
+          setSelectedClient={setSelected}
           selectedClientIndex={selectedClientIndex}
           clients={clients}
-          sendClientAction={this.props.sendClientAction}
+          sendClientAction={sendAction}
           direction="asc"
         />
+        {map(['on', 'off'], onOrOff => (
+          <div key={onOrOff}>
+            <RandomGroup
+              clients={clients}
+              sendClientAction={sendAction}
+              onOrOff={onOrOff}
+            />
+          </div>
+        ))}
         <div>
-          <button
-            onClick={() =>
-              this.props.sendClientAction(['*'], 'multiply', { factor: 2 })
-            }
-          >
+          <button onClick={() => sendAction(['*'], 'multiply', { factor: 2 })}>
             8va
           </button>
           <button
-            onClick={() =>
-              this.props.sendClientAction(['*'], 'multiply', { factor: 0.5 })
-            }
+            onClick={() => sendAction(['*'], 'multiply', { factor: 0.5 })}
           >
             8vb
           </button>
         </div>
         <div>
-          <button onClick={() => this.props.sendClientAction(['*'], 'switch')}>
-            switch
-          </button>
+          <button onClick={() => sendAction(['*'], 'switch')}>switch</button>
         </div>
         <div>
-          <button onClick={() => this.props.sendClientAction(['*'], 'off')}>
-            all off
-          </button>
+          <button onClick={() => sendAction(['*'], 'off')}>all off</button>
         </div>
-        <KeyboardContainer
-          clients={clients}
-          sendClientAction={this.props.sendClientAction}
-        />
+        <KeyboardContainer clients={clients} sendClientAction={sendAction} />
         {map(clients, clientId => (
           <div key={clientId}>
             {clientId}
-            <button onClick={() => this.props.sendClientAction([clientId], 'on')}>
-              on
-            </button>
-            <button
-              onClick={() => this.props.sendClientAction([clientId], 'off')}
-            >
-              off
-            </button>
+            <button onClick={() => sendAction([clientId], 'on')}>on</button>
+            <button onClick={() => sendAction([clientId], 'off')}>off</button>
           </div>
         ))}
       </div>
