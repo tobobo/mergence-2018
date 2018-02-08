@@ -14,7 +14,7 @@ class KeyboardContainer extends Component {
     if (!clients.length) return;
     const offsetClientIndex = selectedClientIndex + 1;
     const newClientIndex = offsetClientIndex % clients.length;
-    sendClientAction(clients[newClientIndex], 'frequency', { frequency });
+    sendClientAction([clients[newClientIndex]], 'frequency', { frequency });
     this.selectedClientIndex = newClientIndex;
   }
 

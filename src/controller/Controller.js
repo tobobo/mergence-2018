@@ -26,9 +26,32 @@ class Controller extends Component {
           sendClientAction={this.props.sendClientAction}
           direction="asc"
         />
-        <button onClick={() => this.props.sendClientAction('*', 'off')}>
-          all off
-        </button>
+        <div>
+          <button
+            onClick={() =>
+              this.props.sendClientAction(['*'], 'multiply', { factor: 2 })
+            }
+          >
+            8va
+          </button>
+          <button
+            onClick={() =>
+              this.props.sendClientAction(['*'], 'multiply', { factor: 0.5 })
+            }
+          >
+            8vb
+          </button>
+        </div>
+        <div>
+          <button onClick={() => this.props.sendClientAction(['*'], 'switch')}>
+            switch
+          </button>
+        </div>
+        <div>
+          <button onClick={() => this.props.sendClientAction(['*'], 'off')}>
+            all off
+          </button>
+        </div>
         <KeyboardContainer
           clients={clients}
           sendClientAction={this.props.sendClientAction}
@@ -36,11 +59,11 @@ class Controller extends Component {
         {map(clients, clientId => (
           <div key={clientId}>
             {clientId}
-            <button onClick={() => this.props.sendClientAction(clientId, 'on')}>
+            <button onClick={() => this.props.sendClientAction([clientId], 'on')}>
               on
             </button>
             <button
-              onClick={() => this.props.sendClientAction(clientId, 'off')}
+              onClick={() => this.props.sendClientAction([clientId], 'off')}
             >
               off
             </button>

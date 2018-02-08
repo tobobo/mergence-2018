@@ -28,9 +28,9 @@ class ClientSwitcher extends Component {
         ? offsetClientIndex % clients.length
         : oldClientIndex + 1 - offsetClientIndex;
     setSelectedClient(newClientIndex);
-    sendClientAction(clients[newClientIndex], 'on');
+    sendClientAction([clients[newClientIndex]], 'on');
     if (solo && newClientIndex !== oldClientIndex)
-      sendClientAction(clients[oldClientIndex], 'off');
+      sendClientAction([clients[oldClientIndex]], 'off');
   }
 
   render() {

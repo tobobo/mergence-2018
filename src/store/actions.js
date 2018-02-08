@@ -1,11 +1,11 @@
 import uuidv4 from 'uuid/v4';
 import request from '../request/apiRequest';
 
-const sendClientAction = (clientId, type, options) => () =>
+const sendClientAction = (clientIds, type, options) => () =>
   request('/api/client_actions', {
     method: 'post',
     body: {
-      clientId,
+      clientIds,
       type,
       options,
     },
