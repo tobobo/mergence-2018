@@ -13,17 +13,6 @@ const texts = {
   },
 };
 
-function hasTouchStart() {
-  return 'ontouchstart' in window;
-}
-
-function getText(textKey) {
-  if (!textKey) return undefined;
-  if (hasTouchStart() && texts.touchStart[textKey])
-    return texts.touchStart[textKey];
-  return texts.default[textKey];
-}
-
 class TextManager extends Component {
   constructor() {
     super();
@@ -31,46 +20,61 @@ class TextManager extends Component {
   }
 
   componentDidMount() {
-    if (hasTouchStart()) {
-      this.waitForTap = true;
-    }
+    this.fadeOutAfterDelay();
   }
 
   componentWillReceiveProps(nextProps) {
-    // make sure to fade out when new text comes in early
+    const { hasTouchStart, textKey } = this.props;
+    const { textVisible } = this.state;
+
     if (nextProps.textKey !== 'welcome') {
-      this.waitForTap = false;
       this.setState({ textVisible: true });
+      this.fadeOutAfterDelay();
+    } else if (
+      !hasTouchStart &&
+      nextProps.hasTouchStart &&
+      textKey === 'welcome' &&
+      textVisible
+    ) {
+      this.cancelFadeTimer();
+      this.waitingForTouch = true;
+    } else if (
+      hasTouchStart &&
+      nextProps.initialTouchProvided &&
+      this.waitingForTouch
+    ) {
+      this.setState({ textVisible: false });
+      this.waitingForTouch = false;
     }
   }
 
-  waitForFadeOut() {
-    this.waitingForFadeOut = true;
-    if (this.waitForTap) {
-      window.addEventListener('touchstart', () => {
-        this.waitingForFadeOut = false;
-        this.setState({ textVisible: false });
-      });
-    } else {
-      setTimeout(() => {
-        this.waitingForFadeOut = false;
-        this.setState({ textVisible: false });
-      }, 8000);
-    }
+  getText(textKey) {
+    const { hasTouchStart } = this.props;
+    if (!textKey) return undefined;
+    if (hasTouchStart && texts.touchStart[textKey])
+      return texts.touchStart[textKey];
+    return texts.default[textKey];
+  }
+
+  fadeOutAfterDelay() {
+    this.cancelFadeTimer();
+    this.fadeTimeout = setTimeout(() => {
+      this.setState({ textVisible: false });
+    }, 8000);
+  }
+
+  cancelFadeTimer() {
+    if (this.fadeTimeout) clearTimeout(this.fadeTimeout);
   }
 
   render() {
     const { textKey } = this.props;
     const { textVisible } = this.state;
-    const text = getText(textKey);
     return (
-      <Transition
-        in={textVisible}
-        appear
-        onEntered={() => this.waitForFadeOut()}
-        timeout={0}
-      >
-        {state => <div className={`text text-${state}`}>{text}</div>}
+      <Transition in={textVisible} appear timeout={0}>
+        {state => (
+          <div className={`text text-${state}`}>{this.getText(textKey)}</div>
+        )}
       </Transition>
     );
   }
@@ -78,15 +82,19 @@ class TextManager extends Component {
 
 TextManager.defaultProps = {
   textKey: 'welcome',
+  hasTouchStart: undefined,
 };
 
 TextManager.propTypes = {
   textKey: propTypes.string,
+  hasTouchStart: propTypes.bool,
+  initialTouchProvided: propTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   textKey: state.player.text,
-  textUpdateTime: state.player.textUpdateTime,
+  hasTouchStart: state.player.hasTouchStart,
+  initialTouchProvided: state.player.initialTouchProvided,
 });
 
 export default connect(mapStateToProps, undefined)(TextManager);

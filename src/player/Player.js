@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getClientId, pollClientActions } from '../store/actions';
 import AudioManager from './AudioManager';
 import VisualsManager from './VisualsManager';
+import TouchManager from './TouchManager';
 
 class Player extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class Player extends Component {
   render() {
     return (
       <div className="full-size">
+        <TouchManager />
         <VisualsManager />
         <AudioManager />
         {/* <div>

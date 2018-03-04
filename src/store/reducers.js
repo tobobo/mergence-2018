@@ -6,6 +6,8 @@ import {
   RECEIVE_CLIENT_ACTIONS,
   RECEIVE_CLIENTS,
   SET_SELECTED_CLIENT,
+  HANDLE_INITIAL_TOUCH,
+  SET_HAS_TOUCH_START,
 } from './actions';
 
 const clientActionMappings = {
@@ -48,6 +50,8 @@ export default combineReducers({
       clientId: undefined,
       gain: 0,
       frequency: 220,
+      hasTouchStart: undefined,
+      initialTouchProvided: false,
     },
     action,
   ) => {
@@ -56,6 +60,10 @@ export default combineReducers({
         return extend({}, state, { clientId: action.clientId });
       case RECEIVE_CLIENT_ACTIONS:
         return handleReceiveClientActions(state, action);
+      case HANDLE_INITIAL_TOUCH:
+        return extend({}, state, { initialTouchProvided: true });
+      case SET_HAS_TOUCH_START:
+        return extend({}, state, { hasTouchStart: action.hasTouchStart });
       default:
         return state;
     }

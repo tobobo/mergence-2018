@@ -13,7 +13,7 @@ const sendClientAction = (clientIds, type, options) => () =>
     response => console.log('sent player action', response),
     error => {
       console.log('some kinda post error', error);
-    }
+    },
   );
 
 function getClientId() {
@@ -72,6 +72,21 @@ function setSelectedClient(selectedClientIndex) {
   };
 }
 
+const HANDLE_INITIAL_TOUCH = 'HANDLE_INITIAL_TOUCH';
+function handleInitialTouch() {
+  return {
+    type: HANDLE_INITIAL_TOUCH,
+  };
+}
+
+const SET_HAS_TOUCH_START = 'SET_HAS_TOUCH_START';
+function setHasTouchStart(hasTouchStart) {
+  return {
+    type: SET_HAS_TOUCH_START,
+    hasTouchStart,
+  };
+}
+
 export {
   sendClientAction,
   getClientId,
@@ -85,4 +100,8 @@ export {
   receiveClients,
   SET_SELECTED_CLIENT,
   setSelectedClient,
+  HANDLE_INITIAL_TOUCH,
+  handleInitialTouch,
+  SET_HAS_TOUCH_START,
+  setHasTouchStart,
 };
