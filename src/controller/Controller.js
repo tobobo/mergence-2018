@@ -57,6 +57,11 @@ class Controller extends Component {
         <div>
           <button onClick={() => sendAction(['*'], 'off')}>all off</button>
         </div>
+        <div>
+          <button onClick={() => sendAction(['*'], 'text', { text: 'thanks' })}>
+            thanks
+          </button>
+        </div>
         <KeyboardContainer clients={clients} sendClientAction={sendAction} />
         {map(clients, clientId => (
           <div key={clientId}>

@@ -15,6 +15,8 @@ const clientActionMappings = {
   multiply: (state, { factor }) =>
     extend({}, state, { frequency: state.frequency * factor }),
   switch: state => extend({}, state, { gain: state.gain ? 0 : 1 }),
+  text: (state, { text }) =>
+    extend({}, state, { text, textUpdateTime: Date.now() }),
 };
 
 function handleReceiveClientActions(state, { clientActions }) {
