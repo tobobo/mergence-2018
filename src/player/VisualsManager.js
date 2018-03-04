@@ -1,11 +1,14 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
+import TextManager from './TextManager';
 
 const VisualsManager = ({ gain }) => {
   const color = gain === 1 ? '#FFFFFF' : '#000000';
   return (
-    <div className="visuals full-size" style={{ backgroundColor: color }} />
+    <div className="visuals full-size" style={{ backgroundColor: color }}>
+      <TextManager />
+    </div>
   );
 };
 

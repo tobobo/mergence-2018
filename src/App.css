@@ -13,6 +13,34 @@ html {
   height: 100%;
 }
 
+.text {
+  position: relative;
+  color: white;
+  font-size: 3.5em;
+  text-align: center;
+  width: 100%;
+  top: 30%;
+  transition: opacity 2s ease-in-out;
+}
+
+@media screen and (max-width: 768px) {
+  .text {
+    font-size: 1.5em;
+  }
+}
+
+.text-entering {
+  opacity: 0;
+}
+
+.text-entered {
+  opacity: 1;
+}
+
+.text-exiting, .text-exited {
+  opacity: 0;
+}
+
 .keyboard, .octave {
   border-collapse: collapse;
 }
