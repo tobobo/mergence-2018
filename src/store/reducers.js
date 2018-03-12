@@ -50,7 +50,7 @@ export default combineReducers({
       clientId: undefined,
       gain: 0,
       frequency: 220,
-      hasTouchStart: undefined,
+      hasTouchStart: 'ontouchstart' in window,
       initialTouchProvided: false,
     },
     action,

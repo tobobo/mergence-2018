@@ -20,26 +20,23 @@ class TextManager extends Component {
   }
 
   componentDidMount() {
-    this.fadeOutAfterDelay();
+    const { hasTouch } = this.props;
+    if (hasTouch) {
+      this.waitingForTouch = true;
+    } else {
+      this.fadeOutAfterDelay();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { hasTouchStart, textKey } = this.props;
-    const { textVisible } = this.state;
+    const { initialTouchProvided, hasTouch } = this.props;
 
     if (nextProps.textKey !== 'welcome') {
       this.setState({ textVisible: true });
       this.fadeOutAfterDelay();
     } else if (
-      !hasTouchStart &&
-      nextProps.hasTouchStart &&
-      textKey === 'welcome' &&
-      textVisible
-    ) {
-      this.cancelFadeTimer();
-      this.waitingForTouch = true;
-    } else if (
-      hasTouchStart &&
+      hasTouch &&
+      !initialTouchProvided &&
       nextProps.initialTouchProvided &&
       this.waitingForTouch
     ) {
@@ -49,10 +46,9 @@ class TextManager extends Component {
   }
 
   getText(textKey) {
-    const { hasTouchStart } = this.props;
+    const { hasTouch } = this.props;
     if (!textKey) return undefined;
-    if (hasTouchStart && texts.touchStart[textKey])
-      return texts.touchStart[textKey];
+    if (hasTouch && texts.touchStart[textKey]) return texts.touchStart[textKey];
     return texts.default[textKey];
   }
 
@@ -82,18 +78,17 @@ class TextManager extends Component {
 
 TextManager.defaultProps = {
   textKey: 'welcome',
-  hasTouchStart: undefined,
 };
 
 TextManager.propTypes = {
   textKey: propTypes.string,
-  hasTouchStart: propTypes.bool,
+  hasTouch: propTypes.bool.isRequired,
   initialTouchProvided: propTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   textKey: state.player.text,
-  hasTouchStart: state.player.hasTouchStart,
+  hasTouch: state.player.hasTouchStart,
   initialTouchProvided: state.player.initialTouchProvided,
 });
 
