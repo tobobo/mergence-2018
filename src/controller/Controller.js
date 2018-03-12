@@ -25,68 +25,97 @@ class Controller extends Component {
     } = this.props;
     return (
       <div>
-        <ClientSwitcher
-          setSelectedClient={setSelected}
-          selectedClientIndex={selectedClientIndex}
-          clients={clients}
-          sendClientAction={sendAction}
-          direction="asc"
-        />
-        {map(['on', 'off'], onOrOff => (
-          <div key={onOrOff}>
-            <RandomGroup
+        <div>
+          <div className="control-box">
+            <ClientSwitcher
+              setSelectedClient={setSelected}
+              selectedClientIndex={selectedClientIndex}
               clients={clients}
               sendClientAction={sendAction}
-              onOrOff={onOrOff}
+              direction="asc"
             />
           </div>
-        ))}
-        <div>
-          <button onClick={() => sendAction(['*'], 'multiply', { factor: 2 })}>
-            8va
-          </button>
-          <button
-            onClick={() => sendAction(['*'], 'multiply', { factor: 0.5 })}
-          >
-            8vb
-          </button>
-        </div>
-        <div>
-          <button onClick={() => sendAction(['*'], 'switch')}>switch</button>
-        </div>
-        <div>
-          <button onClick={() => sendAction(['*'], 'color', { color: 'blue' })}>
-            blues
-          </button>
-        </div>
-        <div>
-          <button onClick={() => sendAction(['*'], 'color', { color: 'red' })}>
-            reds
-          </button>
-        </div>
-        <div>
-          <button
-            onClick={() => sendAction(['*'], 'color', { color: 'rainbow' })}
-          >
-            rainbow
-          </button>
-        </div>
-        <div>
-          <button onClick={() => sendAction(['*'], 'off')}>all off</button>
-        </div>
-        <div>
-          <button onClick={() => sendAction(['*'], 'text', { text: 'thanks' })}>
-            thanks
-          </button>
+          <div className="control-box">
+            {map(['on', 'off'], onOrOff => (
+              <div key={onOrOff}>
+                <RandomGroup
+                  clients={clients}
+                  sendClientAction={sendAction}
+                  onOrOff={onOrOff}
+                />
+              </div>
+            ))}
+            <div>
+              <button onClick={() => sendAction(['*'], 'switch')}>switch</button>
+            </div>
+          </div>
+          <div className="control-box">
+            <div>
+              <button
+                onClick={() => sendAction(['*'], 'multiply', { factor: 2 })}
+              >
+                8va
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => sendAction(['*'], 'multiply', { factor: 0.5 })}
+              >
+                8vb
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => sendAction(['*'], 'frequency', { frequency: 220 })}
+              >
+                reset
+              </button>
+            </div>
+          </div>
+          <div className="control-box">
+            <div>
+              <button
+                onClick={() => sendAction(['*'], 'color', { color: 'blue' })}
+              >
+                blues
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => sendAction(['*'], 'color', { color: 'red' })}
+              >
+                reds
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => sendAction(['*'], 'color', { color: 'rainbow' })}
+              >
+                rainbow
+              </button>
+            </div>
+          </div>
+          <div className="control-box">
+            <div>
+              <button onClick={() => sendAction(['*'], 'off')}>all off</button>
+            </div>
+            <div>
+              <button
+                onClick={() => sendAction(['*'], 'text', { text: 'thanks' })}
+              >
+                thanks
+              </button>
+            </div>
+          </div>
         </div>
         <KeyboardContainer clients={clients} sendClientAction={sendAction} />
-        {map(clients, clientId => (
+        {/* map(clients, clientId => (
           <div key={clientId}>
             {clientId}
             <button onClick={() => sendAction([clientId], 'on')}>on</button>
             <button onClick={() => sendAction([clientId], 'off')}>off</button>
           </div>
-        ))}
+        )) */}
       </div>
     );
   }
