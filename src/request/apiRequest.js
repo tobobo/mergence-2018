@@ -1,7 +1,7 @@
 import 'whatwg-fetch';
 import merge from 'lodash/merge';
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = `http://${window.location.hostname}:3001`;
 
 function handleJsonResponse(response) {
   try {
