@@ -9,7 +9,8 @@ const texts = {
     thanks: 'thank you',
   },
   touchStart: {
-    welcome: 'please turn up your sound and tap your screen to begin',
+    welcome:
+      'please turn on your ringer, turn up your sound, and tap your screen to begin',
   },
 };
 
