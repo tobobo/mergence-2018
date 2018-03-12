@@ -27,7 +27,7 @@ function handleReceiveClientActions(state, { clientActions }) {
     if (!clientActionMappings[clientAction.type]) return;
     newState = clientActionMappings[clientAction.type](
       newState,
-      clientAction.options,
+      clientAction.options
     );
   });
   return newState;
@@ -53,7 +53,7 @@ export default combineReducers({
       hasTouchStart: 'ontouchstart' in window,
       initialTouchProvided: false,
     },
-    action,
+    action
   ) => {
     switch (action.type) {
       case RECEIVE_CLIENT_ID:
@@ -70,7 +70,7 @@ export default combineReducers({
   },
   controller: (
     state = { clients: undefined, selectedClientIndex: 0 },
-    action,
+    action
   ) => {
     switch (action.type) {
       case RECEIVE_CLIENTS:
