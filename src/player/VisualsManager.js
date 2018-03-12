@@ -3,10 +3,25 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextManager from './TextManager';
 
-const VisualsManager = ({ gain }) => {
-  const color = gain === 1 ? '#FFFFFF' : '#000000';
+function getOnColor(color) {
+  switch (color) {
+    case 'white':
+      return '#FFFFFF';
+    case 'blue':
+      return '#0000FF';
+    case 'red':
+      return '#FF0000';
+    case 'rainbow':
+      return '#00FF00';
+    default:
+      return '#FFFFFF';
+  }
+}
+
+const VisualsManager = ({ gain, color }) => {
+  const backgroundColor = gain === 1 ? getOnColor(color) : '#000000';
   return (
-    <div className="visuals full-size" style={{ backgroundColor: color }}>
+    <div className="visuals full-size" style={{ backgroundColor }}>
       <TextManager />
     </div>
   );
@@ -14,10 +29,12 @@ const VisualsManager = ({ gain }) => {
 
 VisualsManager.propTypes = {
   gain: propTypes.number.isRequired,
+  color: propTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
   gain: state.player.gain,
+  color: state.player.color,
 });
 
 export default connect(mapStateToProps, undefined)(VisualsManager);

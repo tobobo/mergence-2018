@@ -55,6 +55,23 @@ class Controller extends Component {
           <button onClick={() => sendAction(['*'], 'switch')}>switch</button>
         </div>
         <div>
+          <button onClick={() => sendAction(['*'], 'color', { color: 'blue' })}>
+            blues
+          </button>
+        </div>
+        <div>
+          <button onClick={() => sendAction(['*'], 'color', { color: 'red' })}>
+            reds
+          </button>
+        </div>
+        <div>
+          <button
+            onClick={() => sendAction(['*'], 'color', { color: 'rainbow' })}
+          >
+            rainbow
+          </button>
+        </div>
+        <div>
           <button onClick={() => sendAction(['*'], 'off')}>all off</button>
         </div>
         <div>
