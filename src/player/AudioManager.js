@@ -33,7 +33,8 @@ class AudioManager extends Component {
   }
 
   setupOscillators() {
-    this.baseFreq = this.props.frequency;
+    const { frequency, gain, hasTouchStart } = this.props;
+    this.baseFreq = frequency;
 
     this.oscillator = this.audioContext.createOscillator();
     this.oscillator.type = 'sine';
@@ -48,12 +49,12 @@ class AudioManager extends Component {
     lowGain.gain.value = 0.48;
 
     this.mainGain = this.audioContext.createGain();
-    this.mainGain.gain.value = this.props.gain;
+    this.mainGain.gain.value = gain;
     this.oscillator.connect(this.mainGain);
     lowGain.connect(this.mainGain);
 
     this.mainGain.connect(this.audioContext.destination);
-    this.startOscillators();
+    if (!hasTouchStart) this.startOscillators();
     this.advanceLfos();
   }
 
@@ -89,6 +90,7 @@ AudioManager.propTypes = {
   gain: propTypes.number,
   frequency: propTypes.number,
   initialTouchProvided: propTypes.bool.isRequired,
+  hasTouchStart: propTypes.bool.isRequired,
 };
 
 AudioManager.defaultProps = {
@@ -97,11 +99,12 @@ AudioManager.defaultProps = {
 };
 
 const mapStateToProps = ({
-  player: { gain, frequency, initialTouchProvided },
+  player: { gain, frequency, initialTouchProvided, hasTouchStart },
 }) => ({
   gain,
   frequency,
   initialTouchProvided,
+  hasTouchStart,
 });
 
 export default connect(mapStateToProps, undefined)(AudioManager);
