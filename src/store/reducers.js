@@ -17,8 +17,7 @@ const clientActionMappings = {
   multiply: (state, { factor }) =>
     extend({}, state, { frequency: state.frequency * factor }),
   switch: state => extend({}, state, { gain: state.gain ? 0 : 1 }),
-  text: (state, { text }) =>
-    extend({}, state, { text, textUpdateTime: Date.now() }),
+  text: (state, { text }) => extend({}, state, { text }),
 };
 
 function handleReceiveClientActions(state, { clientActions }) {
@@ -52,6 +51,7 @@ export default combineReducers({
       frequency: 220,
       hasTouchStart: 'ontouchstart' in window,
       initialTouchProvided: false,
+      text: undefined,
     },
     action
   ) => {
