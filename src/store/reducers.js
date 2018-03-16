@@ -10,6 +10,12 @@ import {
   SET_HAS_TOUCH_START,
 } from './actions';
 
+const initialAudiovisualState = {
+  gain: 0,
+  frequency: 220,
+  color: 'white',
+};
+
 const clientActionMappings = {
   on: state => extend({}, state, { gain: 1 }),
   off: state => extend({}, state, { gain: 0 }),
@@ -23,6 +29,7 @@ const clientActionMappings = {
       color,
       colorIncrement: state.colorIncrement + 1,
     }),
+  refresh: state => extend({}, state, initialAudiovisualState),
 };
 
 function handleReceiveClientActions(state, { clientActions }) {
@@ -49,17 +56,17 @@ function handleReceiveClients(state, { clients }) {
 
 export default combineReducers({
   player: (
-    state = {
-      clientActions: undefined,
-      clientId: undefined,
-      gain: 0,
-      frequency: 220,
-      hasTouchStart: 'ontouchstart' in window,
-      initialTouchProvided: false,
-      color: 'white',
-      colorIncrement: 0,
-      text: undefined,
-    },
+    state = extend(
+      {
+        clientActions: undefined,
+        clientId: undefined,
+        hasTouchStart: 'ontouchstart' in window,
+        initialTouchProvided: false,
+        colorIncrement: 0,
+        text: undefined,
+      },
+      initialAudiovisualState
+    ),
     action
   ) => {
     switch (action.type) {

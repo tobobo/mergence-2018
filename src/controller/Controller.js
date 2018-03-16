@@ -16,6 +16,13 @@ class Controller extends Component {
     this.props.pollClients();
   }
 
+  confirmRefresh() {
+    const { sendClientAction: sendAction } = this.props;
+    // eslint-disable-next-line no-alert
+    if (window.confirm('reset state of all clients?'))
+      sendAction(['*'], 'refresh');
+  }
+
   render() {
     const {
       clients,
@@ -46,7 +53,9 @@ class Controller extends Component {
               </div>
             ))}
             <div>
-              <button onClick={() => sendAction(['*'], 'switch')}>switch</button>
+              <button onClick={() => sendAction(['*'], 'switch')}>
+                switch
+              </button>
             </div>
           </div>
           <div className="control-box">
@@ -66,7 +75,9 @@ class Controller extends Component {
             </div>
             <div>
               <button
-                onClick={() => sendAction(['*'], 'frequency', { frequency: 220 })}
+                onClick={() =>
+                  sendAction(['*'], 'frequency', { frequency: 220 })
+                }
               >
                 reset
               </button>
@@ -104,6 +115,11 @@ class Controller extends Component {
                 onClick={() => sendAction(['*'], 'text', { text: 'thanks' })}
               >
                 thanks
+              </button>
+            </div>
+            <div>
+              <button onClick={() => this.confirmRefresh()}>
+                full refresh
               </button>
             </div>
           </div>
