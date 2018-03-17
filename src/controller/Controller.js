@@ -6,6 +6,7 @@ import {
   pollClients,
   sendClientAction,
   setSelectedClient,
+  sendKeyboardNote,
 } from '../store/actions';
 import ClientSwitcher from './controls/ClientSwitcher';
 import KeyboardContainer from './controls/KeyboardContainer';
@@ -29,6 +30,7 @@ class Controller extends Component {
       clients,
       selectedClientIndex,
       sendClientAction: sendAction,
+      sendKeyboardNote: sendNote,
       setSelectedClient: setSelected,
     } = this.props;
     return (
@@ -120,7 +122,7 @@ class Controller extends Component {
             </div>
           </div>
         </div>
-        <KeyboardContainer clients={clients} sendClientAction={sendAction} />
+        <KeyboardContainer clients={clients} sendKeyboardNote={sendNote} />
         {/* map(clients, clientId => (
           <div key={clientId}>
             {clientId}
@@ -136,6 +138,7 @@ class Controller extends Component {
 Controller.propTypes = {
   pollClients: propTypes.func.isRequired,
   sendClientAction: propTypes.func.isRequired,
+  sendKeyboardNote: propTypes.func.isRequired,
   setSelectedClient: propTypes.func.isRequired,
   clients: propTypes.arrayOf(propTypes.string),
   selectedClientIndex: propTypes.number.isRequired,
@@ -159,6 +162,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setSelectedClient: selectedClientIndex => {
     dispatch(setSelectedClient(selectedClientIndex));
+  },
+  sendKeyboardNote: selectedClientIndex => {
+    dispatch(sendKeyboardNote(selectedClientIndex));
   },
 });
 

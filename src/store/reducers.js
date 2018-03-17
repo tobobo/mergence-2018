@@ -7,6 +7,7 @@ import {
   RECEIVE_CLIENT_ACTIONS,
   RECEIVE_CLIENTS,
   SET_SELECTED_CLIENT,
+  SET_NEXT_KEYBOARD_CLIENT,
   HANDLE_INITIAL_TOUCH,
   SET_HAS_TOUCH_START,
 } from './actions';
@@ -57,6 +58,14 @@ function handleReceiveClients(state, { clients }) {
   return extend({}, state, newStateValues);
 }
 
+function handleKeyboardIncrement(state) {
+  const { keyboardClientIndex, clients } = state;
+  if (!clients || !clients.length) return state;
+  const offsetClientIndex = keyboardClientIndex + 1;
+  const newClientIndex = offsetClientIndex % clients.length;
+  return extend({}, state, { keyboardClientIndex: newClientIndex });
+}
+
 export default combineReducers({
   player: (
     state = extend(
@@ -86,7 +95,11 @@ export default combineReducers({
     }
   },
   controller: (
-    state = { clients: undefined, selectedClientIndex: 0 },
+    state = {
+      clients: undefined,
+      selectedClientIndex: 0,
+      keyboardClientIndex: 0,
+    },
     action
   ) => {
     switch (action.type) {
@@ -96,6 +109,8 @@ export default combineReducers({
         return extend({}, state, {
           selectedClientIndex: action.selectedClientIndex,
         });
+      case SET_NEXT_KEYBOARD_CLIENT:
+        return handleKeyboardIncrement(state);
       default:
         return state;
     }

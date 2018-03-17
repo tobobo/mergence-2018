@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { sendClientAction } from '../store/actions';
+import { sendClientAction, sendKeyboardNote } from '../store/actions';
 import { midiToFrequency } from './lib/helpers';
 
 class MidiManager extends Component {
@@ -35,14 +35,8 @@ class MidiManager extends Component {
   }
 
   handleNotePress(pitch) {
-    const {
-      sendClientAction: sendAction,
-      clients,
-      selectedClientIndex,
-    } = this.props;
-    sendAction([clients[selectedClientIndex]], 'frequency', {
-      frequency: midiToFrequency(pitch),
-    });
+    const { sendKeyboardNote: sendNote } = this.props;
+    sendNote(midiToFrequency(pitch));
   }
 
   render() {
@@ -51,24 +45,18 @@ class MidiManager extends Component {
 }
 
 MidiManager.propTypes = {
-  sendClientAction: propTypes.func.isRequired,
-  clients: propTypes.arrayOf(propTypes.string),
-  selectedClientIndex: propTypes.number.isRequired,
+  // sendClientAction: propTypes.func.isRequired,
+  sendKeyboardNote: propTypes.func.isRequired,
 };
-
-MidiManager.defaultProps = {
-  clients: [],
-};
-
-const mapStateToProps = state => ({
-  clients: state.controller.clients,
-  selectedClientIndex: state.controller.selectedClientIndex,
-});
 
 const mapDispatchToProps = dispatch => ({
   sendClientAction: (clientId, name, options) => {
     dispatch(sendClientAction(clientId, name, options));
   },
+
+  sendKeyboardNote: frequency => {
+    dispatch(sendKeyboardNote(frequency));
+  },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MidiManager);
+export default connect(undefined, mapDispatchToProps)(MidiManager);

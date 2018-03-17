@@ -72,6 +72,22 @@ function setSelectedClient(selectedClientIndex) {
   };
 }
 
+const SEND_KEYBOARD_NOTE = 'SEND_KEYBOARD_NOTE';
+const sendKeyboardNote = frequency => (dispatch, getState) => {
+  dispatch(setNextKeyboardClient());
+  const { controller: { clients, keyboardClientIndex } } = getState();
+  dispatch(
+    sendClientAction([clients[keyboardClientIndex]], 'frequency', { frequency })
+  );
+};
+
+const SET_NEXT_KEYBOARD_CLIENT = 'SET_NEXT_KEYBOARD_CLIENT';
+function setNextKeyboardClient() {
+  return {
+    type: SET_NEXT_KEYBOARD_CLIENT,
+  };
+}
+
 const HANDLE_INITIAL_TOUCH = 'HANDLE_INITIAL_TOUCH';
 function handleInitialTouch() {
   return {
@@ -100,6 +116,10 @@ export {
   receiveClients,
   SET_SELECTED_CLIENT,
   setSelectedClient,
+  SEND_KEYBOARD_NOTE,
+  sendKeyboardNote,
+  SET_NEXT_KEYBOARD_CLIENT,
+  setNextKeyboardClient,
   HANDLE_INITIAL_TOUCH,
   handleInitialTouch,
   SET_HAS_TOUCH_START,
