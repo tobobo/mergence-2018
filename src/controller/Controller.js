@@ -74,13 +74,7 @@ class Controller extends Component {
               </button>
             </div>
             <div>
-              <button
-                onClick={() =>
-                  sendAction(['*'], 'frequency', { frequency: 220 })
-                }
-              >
-                reset
-              </button>
+              <button onClick={() => sendAction(['*'], 'reset')}>reset</button>
             </div>
           </div>
           <div className="control-box">

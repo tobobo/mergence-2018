@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import extend from 'lodash/extend';
+import pick from 'lodash/pick';
 import forEachRight from 'lodash/forEachRight';
 import {
   RECEIVE_CLIENT_ID,
@@ -29,6 +30,8 @@ const clientActionMappings = {
       color,
       colorIncrement: state.colorIncrement + 1,
     }),
+  reset: state =>
+    extend({}, state, pick(initialAudiovisualState, 'frenquency', 'color')),
   refresh: state => extend({}, state, initialAudiovisualState),
 };
 
