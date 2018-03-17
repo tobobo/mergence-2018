@@ -10,6 +10,7 @@ import {
 import ClientSwitcher from './controls/ClientSwitcher';
 import KeyboardContainer from './controls/KeyboardContainer';
 import RandomGroup from './controls/RandomGroup';
+import MidiManager from './MidiManager';
 
 class Controller extends Component {
   componentDidMount() {
@@ -32,6 +33,7 @@ class Controller extends Component {
     } = this.props;
     return (
       <div>
+        <MidiManager />
         <div>
           <div className="control-box">
             <ClientSwitcher

@@ -31,7 +31,7 @@ const clientActionMappings = {
       colorIncrement: state.colorIncrement + 1,
     }),
   reset: state =>
-    extend({}, state, pick(initialAudiovisualState, 'frenquency', 'color')),
+    extend({}, state, pick(initialAudiovisualState, 'frequency', 'color')),
   refresh: state => extend({}, state, initialAudiovisualState),
 };
 

@@ -13,7 +13,7 @@ const sendClientAction = (clientIds, type, options) => () =>
     response => console.log('sent player action', response),
     error => {
       console.log('some kinda post error', error);
-    },
+    }
   );
 
 function getClientId() {
