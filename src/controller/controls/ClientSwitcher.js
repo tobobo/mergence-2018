@@ -1,41 +1,24 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { setClientSwitchSolo, sendClientSwitch } from '../../store/actions';
 
 class ClientSwitcher extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { solo: true };
-  }
-
   handleSoloChange(e) {
-    this.setState({ solo: e.target.checked });
+    const { setSolo } = this.props;
+    setSolo(e.target.checked);
   }
 
   handleSwitch(direction) {
-    const { solo } = this.state;
-    const {
-      clients,
-      setSelectedClient,
-      sendClientAction,
-      selectedClientIndex,
-    } = this.props;
+    const { clients, selectedClientIndex, sendSwitch } = this.props;
     if (!clients.length) return;
-    const oldClientIndex = selectedClientIndex;
     const offsetClientIndex =
       direction === 'asc' ? selectedClientIndex + 1 : selectedClientIndex - 1;
-    const newClientIndex =
-      offsetClientIndex >= 0
-        ? offsetClientIndex % clients.length
-        : clients.length + offsetClientIndex;
-    setSelectedClient(newClientIndex);
-    sendClientAction([clients[newClientIndex]], 'on');
-    if (solo && newClientIndex !== oldClientIndex)
-      sendClientAction([clients[oldClientIndex]], 'off');
+    sendSwitch(offsetClientIndex);
   }
 
   render() {
-    const { selectedClientIndex, clients } = this.props;
-    const { solo } = this.state;
+    const { selectedClientIndex, clients, solo } = this.props;
     return (
       <div>
         <div>clients: {clients.length}</div>
@@ -63,10 +46,20 @@ class ClientSwitcher extends Component {
 }
 
 ClientSwitcher.propTypes = {
-  setSelectedClient: propTypes.func.isRequired,
-  sendClientAction: propTypes.func.isRequired,
+  sendSwitch: propTypes.func.isRequired,
   selectedClientIndex: propTypes.number.isRequired,
   clients: propTypes.arrayOf(propTypes.string).isRequired,
+  setSolo: propTypes.func.isRequired,
+  solo: propTypes.bool.isRequired,
 };
 
-export default ClientSwitcher;
+const mapStateToProps = state => ({
+  solo: state.controller.clientSwitchSolo,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setSolo: soloValue => dispatch(setClientSwitchSolo(soloValue)),
+  sendSwitch: newClientIndex => dispatch(sendClientSwitch(newClientIndex)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientSwitcher);

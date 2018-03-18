@@ -7,6 +7,7 @@ import {
   RECEIVE_CLIENT_ACTIONS,
   RECEIVE_CLIENTS,
   SET_SELECTED_CLIENT,
+  SET_CLIENT_SWITCH_SOLO,
   SET_NEXT_KEYBOARD_CLIENT,
   HANDLE_INITIAL_TOUCH,
   SET_HAS_TOUCH_START,
@@ -97,6 +98,7 @@ export default combineReducers({
   controller: (
     state = {
       clients: undefined,
+      clientSwitchSolo: true,
       selectedClientIndex: 0,
       keyboardClientIndex: 0,
     },
@@ -108,6 +110,10 @@ export default combineReducers({
       case SET_SELECTED_CLIENT:
         return extend({}, state, {
           selectedClientIndex: action.selectedClientIndex,
+        });
+      case SET_CLIENT_SWITCH_SOLO:
+        return extend({}, state, {
+          clientSwitchSolo: action.soloValue,
         });
       case SET_NEXT_KEYBOARD_CLIENT:
         return handleKeyboardIncrement(state);

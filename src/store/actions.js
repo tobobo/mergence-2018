@@ -72,6 +72,34 @@ function setSelectedClient(selectedClientIndex) {
   };
 }
 
+const SEND_CLIENT_SWITCH = 'SEND_CLIENT_SWITCH';
+const sendClientSwitch = newClientIndex => (dispatch, getState) => {
+  const {
+    controller: {
+      clients,
+      selectedClientIndex: oldClientIndex,
+      clientSwitchSolo: solo,
+    },
+  } = getState();
+  if (!clients.length) return;
+  const adjustedNewClientIndex =
+    newClientIndex >= 0
+      ? newClientIndex % clients.length
+      : clients.length + newClientIndex;
+  dispatch(setSelectedClient(adjustedNewClientIndex));
+  dispatch(sendClientAction([clients[adjustedNewClientIndex]], 'on'));
+  if (solo && oldClientIndex !== adjustedNewClientIndex)
+    dispatch(sendClientAction([clients[oldClientIndex]], 'off'));
+};
+
+const SET_CLIENT_SWITCH_SOLO = 'SET_CLIENT_SWITCH_SOLO';
+function setClientSwitchSolo(soloValue) {
+  return {
+    type: SET_CLIENT_SWITCH_SOLO,
+    soloValue,
+  };
+}
+
 const SEND_KEYBOARD_NOTE = 'SEND_KEYBOARD_NOTE';
 const sendKeyboardNote = frequency => (dispatch, getState) => {
   dispatch(setNextKeyboardClient());
@@ -116,6 +144,10 @@ export {
   receiveClients,
   SET_SELECTED_CLIENT,
   setSelectedClient,
+  SEND_CLIENT_SWITCH,
+  sendClientSwitch,
+  SET_CLIENT_SWITCH_SOLO,
+  setClientSwitchSolo,
   SEND_KEYBOARD_NOTE,
   sendKeyboardNote,
   SET_NEXT_KEYBOARD_CLIENT,
