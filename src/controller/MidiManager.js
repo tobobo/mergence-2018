@@ -11,7 +11,6 @@ import { midiToFrequency } from './lib/helpers';
 function mapIntRange(value, inMin, inMax, outMin, outMax) {
   const proportion = value / (inMax - inMin);
   const unroundedMap = proportion * (outMax - outMin) + outMin;
-  console.log(unroundedMap);
   return Math.round(unroundedMap);
 }
 
