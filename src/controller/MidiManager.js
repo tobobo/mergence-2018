@@ -6,6 +6,7 @@ import {
   sendKeyboardNote,
   sendClientSwitch,
   setClientSwitchSolo,
+  toggleRandomGroup,
 } from '../store/actions';
 import { midiToFrequency } from './lib/helpers';
 
@@ -25,6 +26,8 @@ class MidiManager extends Component {
     this.controllerMappings = {
       16: this.switchClient,
       32: this.setSolo,
+      33: this.sendRandomGroupOn,
+      49: this.sendRandomGroupOff,
       65: this.sendSwitch,
       34: this.send8va,
       50: this.send8vb,
@@ -98,6 +101,18 @@ class MidiManager extends Component {
     }
   }
 
+  sendRandomGroupOn(value) {
+    if (value === 0) return;
+    const { toggleGroup } = this.props;
+    toggleGroup('on');
+  }
+
+  sendRandomGroupOff(value) {
+    if (value === 0) return;
+    const { toggleGroup } = this.props;
+    toggleGroup('off');
+  }
+
   sendSwitch(value) {
     if (value === 0) return;
     const { sendAction } = this.props;
@@ -164,6 +179,7 @@ MidiManager.defaultProps = {
 MidiManager.propTypes = {
   sendAction: propTypes.func.isRequired,
   sendSwitch: propTypes.func.isRequired,
+  toggleGroup: propTypes.func.isRequired,
   setSolo: propTypes.func.isRequired,
   selectedClientIndex: propTypes.number.isRequired,
   clients: propTypes.arrayOf(propTypes.string),
@@ -177,6 +193,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   sendAction: (clientId, name, options) => {
     dispatch(sendClientAction(clientId, name, options));
+  },
+
+  toggleGroup: onOrOff => {
+    dispatch(toggleRandomGroup(onOrOff));
   },
 
   sendSwitch: newClientId => {

@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4';
+import { sortBy, slice } from 'lodash';
 import request from '../request/apiRequest';
 
 const sendClientAction = (clientIds, type, options) => () =>
@@ -100,6 +101,20 @@ function setClientSwitchSolo(soloValue) {
   };
 }
 
+const TOGGLE_RANDOM_GROUP = 'TOGGLE_RANDOM_GROUP';
+const toggleRandomGroup = onOrOff => (dispatch, getState) => {
+  const { controller: { clients } } = getState();
+  const baseSliceSize = clients.length / 2;
+  const fuzzedSliceSize = baseSliceSize * Math.random() + 0.5;
+  const safeSliceSize = Math.max(
+    Math.min(clients.length, Math.floor(fuzzedSliceSize)),
+    1
+  );
+  const shuffledClients = sortBy(clients, () => Math.random());
+  const randomClientSlice = slice(shuffledClients, 0, safeSliceSize);
+  dispatch(sendClientAction(randomClientSlice, onOrOff));
+};
+
 const SEND_KEYBOARD_NOTE = 'SEND_KEYBOARD_NOTE';
 const sendKeyboardNote = frequency => (dispatch, getState) => {
   dispatch(setNextKeyboardClient());
@@ -146,6 +161,8 @@ export {
   setSelectedClient,
   SEND_CLIENT_SWITCH,
   sendClientSwitch,
+  TOGGLE_RANDOM_GROUP,
+  toggleRandomGroup,
   SET_CLIENT_SWITCH_SOLO,
   setClientSwitchSolo,
   SEND_KEYBOARD_NOTE,
