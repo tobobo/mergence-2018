@@ -5,6 +5,7 @@ import {
   sendClientAction,
   sendKeyboardNote,
   sendClientSwitch,
+  setClientSwitchSolo,
 } from '../store/actions';
 import { midiToFrequency } from './lib/helpers';
 
@@ -23,8 +24,19 @@ class MidiManager extends Component {
     });
     this.controllerMappings = {
       16: this.switchClient,
+      32: this.setSolo,
+      65: this.sendSwitch,
+      34: this.send8va,
+      50: this.send8vb,
+      66: this.sendReset,
+      35: this.sendBlues,
+      51: this.sendReds,
+      67: this.sendRainbow,
+      36: this.sendAllOff,
+      52: this.sendThanks,
     };
   }
+
   onMidiMessage(message) {
     switch (message.data[0]) {
       case 144:
@@ -43,28 +55,9 @@ class MidiManager extends Component {
     }
   }
 
-  scanForMidi() {
-    const inputs = this.midi.inputs.values();
-    const boundOnMidiMessage = this.onMidiMessage.bind(this);
-    let input;
-    for (
-      input = inputs.next();
-      input && input.value && !input.done;
-      input = inputs.next()
-    ) {
-      input.value.onmidimessage = boundOnMidiMessage;
-    }
-  }
-
-  handleControlChange(controlNumber, controlValue) {
-    console.log('control change', controlNumber, controlValue);
-    if (!this.controllerMappings[controlNumber]) return;
-    this.controllerMappings[controlNumber].call(this, controlValue, this.props);
-  }
-
-  handleNotePress(pitch) {
-    const { sendKeyboardNote: sendNote } = this.props;
-    sendNote(midiToFrequency(pitch));
+  setSolo(value) {
+    const { setSolo } = this.props;
+    setSolo(value === 127);
   }
 
   switchClient(value) {
@@ -81,6 +74,84 @@ class MidiManager extends Component {
       sendSwitch(mappedControllerValue);
   }
 
+  handleNotePress(pitch) {
+    const { sendKeyboardNote: sendNote } = this.props;
+    sendNote(midiToFrequency(pitch));
+  }
+
+  handleControlChange(controlNumber, controlValue) {
+    console.log('control change', controlNumber, controlValue);
+    if (!this.controllerMappings[controlNumber]) return;
+    this.controllerMappings[controlNumber].call(this, controlValue, this.props);
+  }
+
+  scanForMidi() {
+    const inputs = this.midi.inputs.values();
+    const boundOnMidiMessage = this.onMidiMessage.bind(this);
+    let input;
+    for (
+      input = inputs.next();
+      input && input.value && !input.done;
+      input = inputs.next()
+    ) {
+      input.value.onmidimessage = boundOnMidiMessage;
+    }
+  }
+
+  sendSwitch(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'switch');
+  }
+
+  send8va(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'multiply', { factor: 2 });
+  }
+
+  send8vb(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'multiply', { factor: 0.5 });
+  }
+
+  sendReset(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'reset');
+  }
+
+  sendBlues(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'color', { color: 'blue' });
+  }
+
+  sendReds(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'color', { color: 'red' });
+  }
+
+  sendRainbow(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'color', { color: 'rainbow' });
+  }
+
+  sendAllOff(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'off');
+  }
+
+  sendThanks(value) {
+    if (value === 0) return;
+    const { sendAction } = this.props;
+    sendAction(['*'], 'text', { text: 'thanks' });
+  }
+
   render() {
     return '';
   }
@@ -91,8 +162,9 @@ MidiManager.defaultProps = {
 };
 
 MidiManager.propTypes = {
-  sendClientAction: propTypes.func.isRequired,
+  sendAction: propTypes.func.isRequired,
   sendSwitch: propTypes.func.isRequired,
+  setSolo: propTypes.func.isRequired,
   selectedClientIndex: propTypes.number.isRequired,
   clients: propTypes.arrayOf(propTypes.string),
   sendKeyboardNote: propTypes.func.isRequired,
@@ -103,12 +175,16 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sendClientAction: (clientId, name, options) => {
+  sendAction: (clientId, name, options) => {
     dispatch(sendClientAction(clientId, name, options));
   },
 
-  sendSwitch: (clientId, name, options) => {
-    dispatch(sendClientSwitch(clientId, name, options));
+  sendSwitch: newClientId => {
+    dispatch(sendClientSwitch(newClientId));
+  },
+
+  setSolo: soloValue => {
+    dispatch(setClientSwitchSolo(soloValue));
   },
 
   sendKeyboardNote: frequency => {
