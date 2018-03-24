@@ -1,1 +1,1 @@
-web: npm production
+web: node production-server.js
