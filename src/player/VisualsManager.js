@@ -51,7 +51,7 @@ VisualsManager.propTypes = {
   gain: propTypes.number.isRequired,
   color: propTypes.string.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
-  colorIncrement: propTypes.string.isRequired,
+  colorIncrement: propTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
