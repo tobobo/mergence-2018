@@ -1,14 +1,18 @@
 import { Component } from 'react';
 import propTypes from 'prop-types';
 import { connect } from 'react-redux';
+import NoSleep from 'nosleep.js/dist/NoSleep';
 import { handleInitialTouch, setHasTouchStart } from '../store/actions';
 
 class TouchManager extends Component {
   componentDidMount() {
-    const { onTouch, hasTouch } = this.props;
+    const { setTouchState, hasTouch } = this.props;
     if (hasTouch) {
+      this.noSleep = new NoSleep();
+      const enableNoSleep = () => this.noSleep.enable();
       window.addEventListener('touchstart', function touchStartCallback() {
-        onTouch();
+        setTouchState();
+        enableNoSleep();
         window.removeEventListener('touchstart', touchStartCallback);
       });
     }
@@ -20,12 +24,12 @@ class TouchManager extends Component {
 }
 
 TouchManager.propTypes = {
-  onTouch: propTypes.func.isRequired,
+  setTouchState: propTypes.func.isRequired,
   hasTouch: propTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  onTouch: () => dispatch(handleInitialTouch()),
+  setTouchState: () => dispatch(handleInitialTouch()),
   setHasTouch: hasTouchStart => dispatch(setHasTouchStart(hasTouchStart)),
 });
 
