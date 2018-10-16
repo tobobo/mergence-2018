@@ -7,6 +7,7 @@ import {
   sendClientAction,
   setSelectedClient,
   sendKeyboardNote,
+  changeKeyboardMode,
 } from '../store/actions';
 import ClientSwitcher from './controls/ClientSwitcher';
 import KeyboardContainer from './controls/KeyboardContainer';
@@ -31,6 +32,8 @@ class Controller extends Component {
       selectedClientIndex,
       sendClientAction: sendAction,
       sendKeyboardNote: sendNote,
+      changeKeyboardMode: changeKeyMode,
+      keyboardMode,
       setSelectedClient: setSelected,
     } = this.props;
     return (
@@ -123,6 +126,26 @@ class Controller extends Component {
           </div>
         </div>
         <KeyboardContainer clients={clients} sendKeyboardNote={sendNote} />
+        <label htmlFor="modeSoloist">
+          <input
+            type="radio"
+            id="modeSoloist"
+            checked={keyboardMode === 'soloist'}
+            onChange={e => {
+              if (e.target.checked) changeKeyMode('soloist');
+            }}
+          />Soloist
+        </label>
+        <label htmlFor="modeRoundRobin">
+          <input
+            type="radio"
+            id="modeRoundRobin"
+            checked={keyboardMode === 'round robin'}
+            onChange={e => {
+              if (e.target.checked) changeKeyMode('round robin');
+            }}
+          />Round Robin
+        </label>
         {/* map(clients, clientId => (
           <div key={clientId}>
             {clientId}
@@ -140,6 +163,8 @@ Controller.propTypes = {
   sendClientAction: propTypes.func.isRequired,
   sendKeyboardNote: propTypes.func.isRequired,
   setSelectedClient: propTypes.func.isRequired,
+  changeKeyboardMode: propTypes.func.isRequired,
+  keyboardMode: propTypes.string.isRequired,
   clients: propTypes.arrayOf(propTypes.string),
   selectedClientIndex: propTypes.number.isRequired,
 };
@@ -151,6 +176,7 @@ Controller.defaultProps = {
 const mapStateToProps = state => ({
   clients: state.controller.clients,
   selectedClientIndex: state.controller.selectedClientIndex,
+  keyboardMode: state.controller.keyboardMode,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -165,6 +191,9 @@ const mapDispatchToProps = dispatch => ({
   },
   sendKeyboardNote: selectedClientIndex => {
     dispatch(sendKeyboardNote(selectedClientIndex));
+  },
+  changeKeyboardMode: mode => {
+    dispatch(changeKeyboardMode(mode));
   },
 });
 

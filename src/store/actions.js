@@ -131,6 +131,14 @@ function setNextKeyboardClient() {
   };
 }
 
+const CHANGE_KEYBOARD_MODE = 'CHANGE_KEYBOARD_MODE';
+function changeKeyboardMode(mode) {
+  return {
+    type: CHANGE_KEYBOARD_MODE,
+    mode,
+  };
+}
+
 const HANDLE_INITIAL_TOUCH = 'HANDLE_INITIAL_TOUCH';
 function handleInitialTouch() {
   return {
@@ -167,6 +175,8 @@ export {
   setClientSwitchSolo,
   SEND_KEYBOARD_NOTE,
   sendKeyboardNote,
+  CHANGE_KEYBOARD_MODE,
+  changeKeyboardMode,
   SET_NEXT_KEYBOARD_CLIENT,
   setNextKeyboardClient,
   HANDLE_INITIAL_TOUCH,

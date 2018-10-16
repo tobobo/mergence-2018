@@ -9,6 +9,7 @@ import {
   SET_SELECTED_CLIENT,
   SET_CLIENT_SWITCH_SOLO,
   SET_NEXT_KEYBOARD_CLIENT,
+  CHANGE_KEYBOARD_MODE,
   HANDLE_INITIAL_TOUCH,
   SET_HAS_TOUCH_START,
 } from './actions';
@@ -60,11 +61,19 @@ function handleReceiveClients(state, { clients }) {
 }
 
 function handleKeyboardIncrement(state) {
-  const { keyboardClientIndex, clients } = state;
+  const {
+    keyboardMode,
+    selectedClientIndex,
+    keyboardClientIndex,
+    clients,
+  } = state;
   if (!clients || !clients.length) return state;
-  const offsetClientIndex = keyboardClientIndex + 1;
-  const newClientIndex = offsetClientIndex % clients.length;
-  return extend({}, state, { keyboardClientIndex: newClientIndex });
+  if (keyboardMode === 'round robin') {
+    const offsetClientIndex = keyboardClientIndex + 1;
+    const newClientIndex = offsetClientIndex % clients.length;
+    return extend({}, state, { keyboardClientIndex: newClientIndex });
+  }
+  return extend({}, state, { keyboardClientIndex: selectedClientIndex });
 }
 
 export default combineReducers({
@@ -101,6 +110,7 @@ export default combineReducers({
       clientSwitchSolo: true,
       selectedClientIndex: 0,
       keyboardClientIndex: 0,
+      keyboardMode: 'round robin',
     },
     action
   ) => {
@@ -117,6 +127,10 @@ export default combineReducers({
         });
       case SET_NEXT_KEYBOARD_CLIENT:
         return handleKeyboardIncrement(state);
+      case CHANGE_KEYBOARD_MODE:
+        return extend({}, state, {
+          keyboardMode: action.mode,
+        });
       default:
         return state;
     }
