@@ -15,6 +15,11 @@ class TouchManager extends Component {
         enableNoSleep();
         window.removeEventListener('touchstart', touchStartCallback);
       });
+    } else {
+      window.addEventListener('click', function clickCallback() {
+        setTouchState();
+        window.removeEventListener('click', clickCallback);
+      });
     }
   }
 

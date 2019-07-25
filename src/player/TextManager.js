@@ -5,7 +5,7 @@ import { Transition } from 'react-transition-group';
 
 const texts = {
   default: {
-    welcome: 'please turn up your sound',
+    welcome: 'please turn up your sound and click to begin',
     thanks: 'thank you',
   },
   touchStart: {
@@ -21,22 +21,16 @@ class TextManager extends Component {
   }
 
   componentDidMount() {
-    const { hasTouch } = this.props;
-    if (hasTouch) {
-      this.waitingForTouch = true;
-    } else {
-      this.fadeOutAfterDelay();
-    }
+    this.waitingForTouch = true;
   }
 
   componentWillReceiveProps(nextProps) {
-    const { initialTouchProvided, hasTouch } = this.props;
+    const { initialTouchProvided } = this.props;
 
     if (nextProps.textKey !== 'welcome') {
       this.setState({ textVisible: true });
       this.fadeOutAfterDelay();
     } else if (
-      hasTouch &&
       !initialTouchProvided &&
       nextProps.initialTouchProvided &&
       this.waitingForTouch
