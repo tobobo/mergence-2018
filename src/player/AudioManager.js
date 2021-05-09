@@ -73,10 +73,16 @@ class AudioManager extends Component {
 
   advanceLfos() {
     const oscSinVal = Math.sin(this.audioContext.currentTime * 50) * 4;
-    this.oscillator.frequency.value = this.baseFreq + oscSinVal;
+    this.oscillator.frequency.setValueAtTime(
+      this.baseFreq + oscSinVal,
+      this.audioContext.currentTime
+    );
     const lowOscSinVal = Math.sin(this.audioContext.currentTime * 0.075) * 1;
     const lowBaseFreq = this.baseFreq / 2;
-    this.lowOsc.frequency.value = lowBaseFreq + lowOscSinVal;
+    this.lowOsc.frequency.setValueAtTime(
+      lowBaseFreq + lowOscSinVal,
+      this.audioContext.currentTime
+    );
     setTimeout(() => this.advanceLfos(), 1);
   }
 
